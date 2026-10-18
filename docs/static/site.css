@@ -874,3 +874,24 @@
 /* Belt and braces against any future horizontal overflow: nothing on this
    page is meant to scroll sideways at the document level. */
 html { overflow-x: clip; }
+
+/* --------------------------------------------------------------------------
+   Teaser figure — one figure, two grounds
+   --------------------------------------------------------------------------
+   The teaser is a raster drawn on paper. On the dark theme a white-ground
+   raster is the brightest object on the page, so it carried its own light
+   rectangle while everything around it went navy. Both cuts are shipped and
+   the theme picks one; they are pixel-identical in geometry, so swapping them
+   changes the colour and nothing else. Keyed off the same attribute the theme
+   toggle writes, and off the OS preference when nothing has been chosen —
+   exactly the pattern .logo already uses.
+   -------------------------------------------------------------------------- */
+.teaser__fig--dark { display: none; }
+
+:root[data-theme="dark"] .teaser__fig--light { display: none; }
+:root[data-theme="dark"] .teaser__fig--dark  { display: block; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .teaser__fig--light { display: none; }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .teaser__fig--dark  { display: block; }
+}

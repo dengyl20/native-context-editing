@@ -660,9 +660,9 @@ table.logtable tr.is-new { animation: login var(--dur-slow) var(--ease) both; }
           <span class="count" style="margin-right:2px">speed</span>
           <div class="seg" id="speed" role="group" aria-label="Playback speed">
             <button type="button" data-speed="0.5">0.5&times;</button>
-            <button type="button" data-speed="1" aria-pressed="true">1&times;</button>
+            <button type="button" data-speed="1">1&times;</button>
             <button type="button" data-speed="2">2&times;</button>
-            <button type="button" data-speed="4">4&times;</button>
+            <button type="button" data-speed="4" aria-pressed="true">4&times;</button>
           </div>
         </div>
       </div>
@@ -894,7 +894,9 @@ window.NCE_CASES = {"cases":[{"id":"tune-mjcf","title":"Tuning a MuJoCo model in
     turn: -1,
     playing: false,
     inFlight: false,
-    speed: 1,
+    // The recorded runs are long (49 turns and up), so the default is the
+    // fastest setting: at 1x a reader waits minutes to see one edit fire.
+    speed: 4,
     token: 0,
     log: [],
     cum: 0,          // cumulative context tokens consumed up to current turn
@@ -1706,13 +1708,35 @@ window.NCE_CASES = {"cases":[{"id":"tune-mjcf","title":"Tuning a MuJoCo model in
       if (s.peak_tokens) stats.appendChild(stat('peak', fmtK(s.peak_tokens)));
       b.appendChild(stats);
 
-      b.addEventListener('click', function () { selectCase(i); });
+      // Choosing a run is the moment the reader wants the replay, not the
+      // card row: scroll the replay's first panel into view so nothing has to
+      // be hunted for below the fold. The bootstrap call selects case 0 with
+      // no scroll, so arriving on the page does not jump.
+      b.addEventListener('click', function () {
+        selectCase(i);
+        scrollToReplay();
+      });
       D.picker.appendChild(b);
     });
   }
 
   /* ================================ bootstrap ============================ */
   var rail = null;
+
+
+  /* Bring the replay into view after the reader picks a run. The sticky header
+     covers the top of the viewport, so the scroll target is offset by its
+     height; `scrollIntoView` on the state panel would hide the panel's own
+     heading under it. */
+  function scrollToReplay() {
+    var anchor = document.querySelector('.replay') || document.querySelector('.grid--main');
+    if (!anchor) return;
+    var header = document.querySelector('.topbar, header');
+    var offset = header ? header.getBoundingClientRect().height + 8 : 0;
+    var y = anchor.getBoundingClientRect().top + window.pageYOffset - offset;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: Math.max(0, y), behavior: reduce ? 'auto' : 'smooth' });
+  }
 
   function selectCase(i) {
     pause();

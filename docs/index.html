@@ -175,11 +175,16 @@
   <div class="shell">
     <figure class="teaser reveal">
       <div class="teaser__frame">
-        <!-- static/img/teaser.svg is the same figure as vector, and stands in
-             automatically if the raster is ever missing. -->
+        <!-- The figure is a light-ground raster, so it ships in both cuts: a
+             white-ground PNG is the brightest object on a dark page and reads
+             as a hole in the layout. The two are pixel-identical in geometry;
+             only the palette differs, and CSS picks one from the theme. The
+             SVG stands in automatically if a raster is ever missing. -->
         <img src="static/img/teaser.png"
              alt="Before an edit turn, four addressable context blocks: system, task, and two tool outputs. After the turn, one block is rewritten to a note, one is dropped, the first two are kept, and a new note is appended."
-             width="2560" height="800" id="teaser-img">
+             width="2560" height="800" id="teaser-img" class="teaser__fig teaser__fig--light">
+        <img src="static/img/teaser-dark.png" alt="" aria-hidden="true"
+             width="2560" height="800" class="teaser__fig teaser__fig--dark">
         <img src="static/img/teaser.svg" alt="" width="1280" height="434" id="teaser-svg" hidden>
       </div>
       <figcaption>

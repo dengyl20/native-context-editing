@@ -1,0 +1,462 @@
+/* ==========================================================================
+   NCE — shared design tokens
+   Source of truth: doc/NativeLongHorizon/release_1016/STYLE.md
+   Consumed by: the project website (docs/) and, as the colour reference,
+   the promo video (nce-pv/).
+
+   Every value here mirrors STYLE.md exactly. Nothing in this file depends on
+   a build step, a CDN or a network call.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Tokens under a light surface (the default)
+   -------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  /* --- surfaces & ink (STYLE.md "配色") --------------------------------- */
+  --paper:            #FBFAF7;  /* page ground */
+  --paper-raised:     #FFFFFF;  /* cards sitting on the ground */
+  --paper-sunken:     #F3F1EB;  /* wells, code blocks, replay track */
+  --ink:              #1C2230;  /* body text */
+  --ink-secondary:    #4F5867;  /* captions, labels, axis text (6.8:1 on --paper) */
+  --hairline:         #E6E3DC;  /* 1px rules, card borders */
+  --hairline-strong:  #D6D2C8;  /* borders that need to read as structure */
+
+  /* --- brand blue (NCE the method, and general emphasis) ---------------- */
+  --brand:            #2563EB;
+  --brand-tint:       #EFF6FF;  /* the pale blue ground on light surfaces */
+  --brand-strong:     #1D4ED8;  /* pressed / hover-deep */
+  --brand-on-tint:    #2563EB;
+  --on-brand:         #FFFFFF;  /* text on a --brand fill (light: 8.1:1) */
+
+  /* --- token chip: an address, <sid_hi_hh><sid_lo_ll> ------------------- */
+  --chip-addr-bg:     #DBEAFE;
+  --chip-addr-fg:     #1D4ED8;
+
+  /* --- token chip: the envelope, <ctx> and </ctx> ----------------------- */
+  --chip-env-bg:      #3A4352;
+  --chip-env-fg:      #FFFFFF;
+
+  /* --- operator chips: drop / rewrite / append -------------------------- */
+  --chip-drop-bg:     #F7D3D1;
+  --chip-drop-fg:     #A1282A;
+  --chip-rewrite-bg:  #FAE1B0;
+  --chip-rewrite-fg:  #7A4A00;
+  --chip-append-bg:   #D6EDDA;
+  --chip-append-fg:   #2C6A3B;
+
+  /* --- context-block type colours (replay track, video blocks) ---------- */
+  --block-system:     #3A4352;  /* the locked block */
+  --block-task:       #2563EB;
+  --block-tool:       #C9D3E3;  /* neutral blue-grey for tool output */
+  --block-note:       #2C6A3B;  /* a note the model appended */
+  --block-rewritten:  #DFA032;  /* amber stroke on a block that was rewritten */
+
+  /* --- chart series ----------------------------------------------------- */
+  --series-comp:      #A3ACB9;
+  --series-tools:     #6B7689;
+  --series-nce:       #2563EB;
+  --gridline:         #E6E3DC;
+
+  /* --- type families ---------------------------------------------------- */
+  --font-display: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans:    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* --- type scale (fluid; 1.25 ratio, display steps tightened) ---------- */
+  --fs-display: clamp(2.75rem, 1.85rem + 4.2vw, 5.25rem);  /* hero wordmark  */
+  --fs-h1:      clamp(2.25rem, 1.65rem + 2.6vw, 3.5rem);
+  --fs-h2:      clamp(1.625rem, 1.35rem + 1.2vw, 2.25rem);
+  --fs-h3:      clamp(1.25rem, 1.14rem + 0.5vw, 1.5rem);
+  --fs-h4:      1.125rem;
+  --fs-lead:    clamp(1.0625rem, 1.01rem + 0.28vw, 1.25rem);
+  --fs-body:    1rem;
+  --fs-small:   0.875rem;
+  --fs-caption: 0.78125rem;
+  --fs-chip:    0.8125rem;   /* token chips */
+  --fs-micro:   0.6875rem;   /* eyebrow / all-caps labels */
+
+  /* --- line heights ----------------------------------------------------- */
+  --lh-display: 1.02;
+  --lh-heading: 1.14;
+  --lh-lead:    1.5;
+  --lh-body:    1.68;
+  --lh-tight:   1.28;
+  --lh-chip:    1;
+
+  /* --- tracking --------------------------------------------------------- */
+  --tracking-display: -0.015em;
+  --tracking-heading: -0.011em;
+  --tracking-body:     0;
+  --tracking-eyebrow:  0.11em;   /* only for the all-caps eyebrow style */
+  --tracking-mono:    -0.01em;
+
+  /* --- weights ---------------------------------------------------------- */
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semibold:600;
+  --fw-bold:    700;
+  --fw-black:   800;
+
+  /* --- spacing (4px base) ----------------------------------------------- */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.5rem;
+  --space-6:  2rem;
+  --space-7:  3rem;
+  --space-8:  4rem;
+  --space-9:  6rem;
+  --space-10: 8rem;
+
+  /* --- layout ----------------------------------------------------------- */
+  --measure:      68ch;   /* comfortable reading width */
+  --measure-wide: 84rem;  /* page shell */
+  --measure-narrow: 46rem;
+
+  /* --- radii ------------------------------------------------------------ */
+  --radius-chip:  4px;    /* STYLE.md: token chips are 4px */
+  --radius-sm:    6px;
+  --radius-md:    10px;
+  --radius-lg:    16px;
+  --radius-pill:  999px;
+
+  /* --- elevation -------------------------------------------------------- */
+  --shadow-xs: 0 1px 2px rgba(28, 34, 48, 0.06);
+  --shadow-sm: 0 1px 3px rgba(28, 34, 48, 0.07), 0 1px 2px rgba(28, 34, 48, 0.05);
+  --shadow-md: 0 6px 20px -6px rgba(28, 34, 48, 0.14), 0 2px 6px rgba(28, 34, 48, 0.05);
+  --shadow-lg: 0 22px 48px -18px rgba(28, 34, 48, 0.26), 0 4px 12px rgba(28, 34, 48, 0.06);
+
+  /* --- motion (STYLE.md「动效」) --------------------------------------- */
+  --ease:        cubic-bezier(0.16, 1, 0.3, 1);  /* expo-out, the main curve */
+  --ease-inout:  cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast:    180ms;
+  --dur-base:    400ms;
+  --dur-slow:    650ms;
+  --dur-slower:  900ms;
+  --stagger:     50ms;   /* 40–60ms stagger between siblings */
+
+  /* --- chip geometry ---------------------------------------------------- */
+  --chip-pad-x:   0.35em;   /* STYLE.md: about 0.35em each side */
+  --chip-pad-y:   0.18em;
+  --chip-gap:     0.5px;    /* two address chips sit flush against each other */
+  --chip-icon:    1em;
+
+  /* --- focus ------------------------------------------------------------ */
+  --focus-ring: 2px solid var(--brand);
+  --focus-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   2. Dark surface
+   Applied when <html data-theme="dark">, or automatically when the visitor
+   has no explicit preference and their OS asks for dark.
+   -------------------------------------------------------------------------- */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --paper:            #0D1424;
+  --paper-raised:     #141D31;
+  --paper-sunken:     #0A1020;
+  --ink:              #E8ECF4;
+  --ink-secondary:    #9AA4B6;
+  --hairline:         #25304A;
+  --hairline-strong:  #33405C;
+
+  --brand:            #93C5FD;
+  --brand-tint:       #16243F;
+  --brand-strong:     #BFDBFE;
+  --brand-on-tint:    #BFDBFE;
+  --on-brand:         #0D1424;  /* text on a --brand fill (dark: 8.7:1) */
+
+  --chip-addr-bg:     #1E3A6E;
+  --chip-addr-fg:     #BFDBFE;
+
+  --chip-env-bg:      #4A5568;
+  --chip-env-fg:      #FFFFFF;
+
+  --chip-drop-bg:     #4A1F22;
+  --chip-drop-fg:     #F2958F;
+  --chip-rewrite-bg:  #4A3613;
+  --chip-rewrite-fg:  #F2C46B;
+  --chip-append-bg:   #1F3D27;
+  --chip-append-fg:   #8FD19E;
+
+  --block-system:     #4A5568;
+  --block-task:       #93C5FD;
+  --block-tool:       #45536E;
+  --block-note:       #8FD19E;
+  --block-rewritten:  #DFA032;
+
+  --series-comp:      #6B7689;
+  --series-tools:     #A3ACB9;
+  --series-nce:       #93C5FD;
+  --gridline:         #25304A;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 26px 60px -20px rgba(0, 0, 0, 0.72);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    color-scheme: dark;
+
+    --paper:            #0D1424;
+    --paper-raised:     #141D31;
+    --paper-sunken:     #0A1020;
+    --ink:              #E8ECF4;
+    --ink-secondary:    #9AA4B6;
+    --hairline:         #25304A;
+    --hairline-strong:  #33405C;
+
+    --brand:            #93C5FD;
+    --brand-tint:       #16243F;
+    --brand-strong:     #BFDBFE;
+    --brand-on-tint:    #BFDBFE;
+    --on-brand:         #0D1424;  /* text on a --brand fill (dark: 8.7:1) */
+  
+    --chip-addr-bg:     #1E3A6E;
+    --chip-addr-fg:     #BFDBFE;
+
+    --chip-env-bg:      #4A5568;
+    --chip-env-fg:      #FFFFFF;
+
+    --chip-drop-bg:     #4A1F22;
+    --chip-drop-fg:     #F2958F;
+    --chip-rewrite-bg:  #4A3613;
+    --chip-rewrite-fg:  #F2C46B;
+    --chip-append-bg:   #1F3D27;
+    --chip-append-fg:   #8FD19E;
+
+    --block-system:     #4A5568;
+    --block-task:       #93C5FD;
+    --block-tool:       #45536E;
+    --block-note:       #8FD19E;
+    --block-rewritten:  #DFA032;
+
+    --series-comp:      #6B7689;
+    --series-tools:     #A3ACB9;
+    --series-nce:       #93C5FD;
+    --gridline:         #25304A;
+
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.45);
+    --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 26px 60px -20px rgba(0, 0, 0, 0.72);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. Base element defaults
+   Deliberately light-touch: a page only has to set data-theme on <html>.
+   -------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tracking-body);
+  font-feature-settings: "tnum" 1, "cv11" 1, "ss01" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4 {
+  margin: 0 0 var(--space-4);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--tracking-heading);
+  text-wrap: balance;
+}
+
+h1 { font-family: var(--font-display); font-size: var(--fs-h1); letter-spacing: var(--tracking-display); }
+h2 { font-family: var(--font-display); font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); font-weight: var(--fw-semibold); }
+h4 { font-size: var(--fs-h4); font-weight: var(--fw-semibold); line-height: var(--lh-tight); }
+
+p { margin: 0 0 var(--space-4); }
+p:last-child { margin-bottom: 0; }
+
+a { color: var(--brand); text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+a:hover { color: var(--brand-strong); }
+
+code, kbd, samp, pre { font-family: var(--font-mono); font-feature-settings: "tnum" 1; }
+
+strong, b { font-weight: var(--fw-semibold); }
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--hairline);
+  margin: var(--space-7) 0;
+}
+
+img, svg, video, canvas { display: block; max-width: 100%; }
+
+/* The UA stylesheet's [hidden] is a bare display:none, which any later
+   display rule beats — and `img, svg, video` above is exactly such a rule.
+   The teaser swaps a placeholder for the real figure by toggling .hidden, so
+   the guard has to win outright. */
+[hidden] { display: none !important; }
+
+
+::selection { background: var(--chip-addr-bg); color: var(--chip-addr-fg); }
+
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+  border-radius: var(--radius-sm);
+}
+
+/* --- utility ------------------------------------------------------------------ */
+
+.display {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--tracking-display);
+  font-weight: var(--fw-regular);
+}
+
+.lead {
+  font-size: var(--fs-lead);
+  line-height: var(--lh-lead);
+  color: var(--ink-secondary);
+  max-width: var(--measure);
+}
+
+.eyebrow {
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+}
+
+.caption { font-size: var(--fs-caption); color: var(--ink-secondary); line-height: var(--lh-tight); }
+
+.mono { font-family: var(--font-mono); font-size: 0.9375em; letter-spacing: var(--tracking-mono); }
+
+.tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+
+.nce { color: var(--brand); font-weight: var(--fw-semibold); }
+
+.shell { width: 100%; max-width: var(--measure-wide); margin-inline: auto; padding-inline: var(--space-5); }
+
+/* --------------------------------------------------------------------------
+   4. Token chips
+   Markup contract (other agents link this file and reuse it verbatim):
+
+     <span class="chip chip--addr"><span class="chip-token">&lt;sid_hi_12&gt;</span><span class="chip-token">&lt;sid_lo_07&gt;</span></span>
+
+     <span class="chip chip--env"><span class="chip-token">&lt;ctx&gt;</span></span>
+     <span class="chip chip--env"><span class="chip-token">&lt;/ctx&gt;</span></span>
+
+     <span class="chip chip--op chip--drop"><svg class="chip-icon" …>…</svg><span class="chip-label">drop</span></span>
+     <span class="chip chip--op chip--rewrite"><svg class="chip-icon" …>…</svg><span class="chip-label">rewrite</span></span>
+     <span class="chip chip--op chip--append"><svg class="chip-icon" …>…</svg><span class="chip-label">append</span></span>
+
+   An address is ALWAYS exactly two adjacent chips — that is what the pair of
+   tokens <sid_hi_h><sid_lo_l> means in the grammar.
+   -------------------------------------------------------------------------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: var(--chip-pad-y) var(--chip-pad-x);
+  border-radius: var(--radius-chip);
+  font-family: var(--font-mono);
+  font-size: var(--fs-chip);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-chip);
+  letter-spacing: var(--tracking-mono);
+  white-space: nowrap;
+  vertical-align: baseline;
+  background: var(--paper-sunken);
+  color: var(--ink);
+  font-variant-ligatures: none;
+}
+
+/* the bare token glyphs inside a chip: <ctx>, <sid_hi_12>, drop … */
+.chip-token { display: inline-block; }
+
+/* the word on an operator chip reads better in the sans face */
+.chip-label {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.005em;
+  font-size: 0.9em;
+}
+
+/* drop → trash-2, rewrite → pen-line, append → square-plus (Lucide, ISC) */
+.chip-icon {
+  flex: none;
+  width: var(--chip-icon);
+  height: var(--chip-icon);
+  stroke: currentColor;
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+/* --- address chip ------------------------------------------------------- */
+.chip--addr { background: var(--chip-addr-bg); color: var(--chip-addr-fg); }
+.chip--addr + .chip--addr { margin-left: var(--chip-gap); }
+
+/* --- envelope chip ------------------------------------------------------ */
+.chip--env { background: var(--chip-env-bg); color: var(--chip-env-fg); }
+
+/* --- operator chips ----------------------------------------------------- */
+.chip--op { padding-left: calc(var(--chip-pad-x) * 0.75); }
+.chip--drop    { background: var(--chip-drop-bg);    color: var(--chip-drop-fg); }
+.chip--rewrite { background: var(--chip-rewrite-bg); color: var(--chip-rewrite-fg); }
+.chip--append  { background: var(--chip-append-bg);  color: var(--chip-append-fg); }
+
+/* --- optional inline grammar notation ----------------------------------- */
+.chip--code {
+  background: var(--paper-sunken);
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+}
+
+/* --------------------------------------------------------------------------
+   5. Context blocks (replay track + video blocks share these colours)
+   -------------------------------------------------------------------------- */
+.block { border-left: 3px solid var(--block-tool); background: var(--paper-raised); }
+.block--system    { border-left-color: var(--block-system); }
+.block--task      { border-left-color: var(--block-task); }
+.block--tool      { border-left-color: var(--block-tool); }
+.block--note      { border-left-color: var(--block-note); }
+.block--rewritten { box-shadow: inset 0 0 0 1.5px var(--block-rewritten); }
+.block--dropped   { background: var(--chip-drop-bg); color: var(--chip-drop-fg); }
+
+/* --------------------------------------------------------------------------
+   6. Motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 1ms;
+    --dur-base: 1ms;
+    --dur-slow: 1ms;
+    --dur-slower: 1ms;
+    --stagger: 0ms;
+  }
+  html { scroll-behavior: auto; }
+}
+
+html { scroll-behavior: smooth; }

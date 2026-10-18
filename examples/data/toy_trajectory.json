@@ -1,0 +1,138 @@
+{
+  "id": "toy-timeparse-0001",
+  "description": "A hand-written toy trajectory: an agent fixes a duration parser in a small Python package.",
+  "system": "You are a coding agent working in a repository at /workspace. Use the tools to inspect and change files. Call one tool per turn as <tool_call>{\"name\": ..., \"arguments\": {...}}</tool_call>. Tools: grep(pattern, path), read(path, offset?, limit?), edit(path, old, new), bash(command).",
+  "task": "The function `parse_duration` in the `timeparse` package returns wrong values: `parse_duration(\"1h30m\")` gives 1800 instead of 5400, and inputs with spaces such as \"1h 30m\" are rejected. Fix it and add a regression test.",
+  "turns": [
+    {
+      "output": "I'll start by locating the parser.\n<tool_call>{\"name\": \"grep\", \"arguments\": {\"pattern\": \"def parse_duration|parse_duration\\\\(\", \"path\": \".\"}}</tool_call>",
+      "observations": [
+        {
+          "tool": "grep",
+          "text": "src/timeparse/core.py:9:def parse_duration(text: str) -> int:\nsrc/timeparse/core.py:13:    >>> parse_duration(\"90s\")\nsrc/timeparse/__init__.py:3:from .core import parse_duration, format_duration\ntests/test_core.py:3:from timeparse import parse_duration, format_duration\ntests/test_core.py:8:    assert parse_duration(\"90s\") == 90\ntests/test_core.py:12:    assert parse_duration(\"1h30m\") == 5400"
+        }
+      ]
+    },
+    {
+      "output": "The implementation lives in core.py; reading it in full.\n<tool_call>{\"name\": \"read\", \"arguments\": {\"path\": \"src/timeparse/core.py\"}}</tool_call>",
+      "observations": [
+        {
+          "tool": "read",
+          "text": "     1\t\"\"\"Parse human-readable durations such as \"1h30m\" into seconds.\"\"\"\n     2\timport re\n     3\t\n     4\tfrom .units import UNIT_SECONDS\n     5\t\n     6\t_TOKEN = re.compile(r\"(\\d+)([hms])\")\n     7\t\n     8\t\n     9\tdef parse_duration(text: str) -> int:\n    10\t    \"\"\"Return the number of seconds in ``text``.\n    11\t\n    12\t    >>> parse_duration(\"90s\")\n    13\t    90\n    14\t    \"\"\"\n    15\t    if not text:\n    16\t        raise ValueError(\"empty duration\")\n    17\t    pos = 0\n    18\t    total = 0\n    19\t    for match in _TOKEN.finditer(text):\n    20\t        if match.start() != pos:\n    21\t            raise ValueError(f\"invalid duration {text!r}\")\n    22\t        value, unit = match.groups()\n    23\t        total = int(value) * UNIT_SECONDS[unit]\n    24\t        pos = match.end()\n    25\t    if pos != len(text):\n    26\t        raise ValueError(f\"invalid duration {text!r}\")\n    27\t    return total\n    28\t\n    29\t\n    30\tdef format_duration(seconds: int) -> str:\n    31\t    \"\"\"Inverse of parse_duration for whole units.\"\"\"\n    32\t    parts = []\n    33\t    for unit, size in sorted(UNIT_SECONDS.items(), key=lambda kv: -kv[1]):\n    34\t        if seconds >= size:\n    35\t            parts.append(f\"{seconds // size}{unit}\")\n    36\t            seconds %= size\n    37\t    return \"\".join(parts) or \"0s\""
+        }
+      ]
+    },
+    {
+      "output": "Let me run the test suite to see how it fails.\n<tool_call>{\"name\": \"bash\", \"arguments\": {\"command\": \"python -m pytest -q tests\"}}</tool_call>",
+      "observations": [
+        {
+          "tool": "bash",
+          "text": "============================= test session starts ==============================\ncollected 9 items\n\ntests/test_core.py .FF.F...F                                             [100%]\n\n=================================== FAILURES ===================================\n____________________________ test_hours_and_minutes ____________________________\n\n    def test_hours_and_minutes():\n>       assert parse_duration(\"1h30m\") == 5400\nE       AssertionError: assert 1800 == 5400\nE        +  where 1800 = parse_duration('1h30m')\n\ntests/test_core.py:12: AssertionError\n________________________________ test_all_units ________________________________\n\n    def test_all_units():\n>       assert parse_duration(\"2h5m7s\") == 7507\nE       AssertionError: assert 7 == 7507\nE        +  where 7 = parse_duration('2h5m7s')\n\ntests/test_core.py:16: AssertionError\n_______________________________ test_whitespace ________________________________\n\n    def test_whitespace():\n>       assert parse_duration(\"1h 30m\") == 5400\n\nsrc/timeparse/core.py:22: in parse_duration\n    raise ValueError(f\"invalid duration {text!r}\")\nE   ValueError: invalid duration '1h 30m'\n\ntests/test_core.py:20: ValueError\n____________________________ test_format_roundtrip _____________________________\n\n    def test_format_roundtrip():\n>       assert format_duration(parse_duration(\"2h5m7s\")) == \"2h5m7s\"\nE       AssertionError: assert '7s' == '2h5m7s'\n\ntests/test_core.py:33: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_core.py::test_hours_and_minutes - AssertionError: assert 1800 == 5400\nFAILED tests/test_core.py::test_all_units - AssertionError: assert 7 == 7507\nFAILED tests/test_core.py::test_whitespace - ValueError: invalid duration '1h 30m'\nFAILED tests/test_core.py::test_format_roundtrip - AssertionError: assert '7s' == '2h5m7s'\n========================= 4 failed, 5 passed in 0.04s =========================="
+        }
+      ]
+    },
+    {
+      "output": "Before touching the loop, I'll check the unit table in case a factor is wrong.\n<tool_call>{\"name\": \"read\", \"arguments\": {\"path\": \"src/timeparse/units.py\"}}</tool_call>",
+      "observations": [
+        {
+          "tool": "read",
+          "text": "     1\t\"\"\"Unit table shared by the parser and the formatter.\"\"\"\n     2\t\n     3\tUNIT_SECONDS = {\n     4\t    \"h\": 3600,\n     5\t    \"m\": 60,\n     6\t    \"s\": 1,\n     7\t}\n     8\t\n     9\t# Units accepted by the legacy config loader; kept for backwards compatibility.\n    10\tLEGACY_ALIASES = {\"hr\": \"h\", \"min\": \"m\", \"sec\": \"s\"}"
+        }
+      ]
+    },
+    {
+      "output": "The table is fine. The loop assigns `total` instead of accumulating it, so only the last unit counts. Fixing that.\n<tool_call>{\"name\": \"edit\", \"arguments\": {\"path\": \"src/timeparse/core.py\", \"old\": \"total = int(value) * UNIT_SECONDS[unit]\", \"new\": \"total += int(value) * UNIT_SECONDS[unit]\"}}</tool_call>",
+      "observations": [
+        {
+          "tool": "edit",
+          "text": "The file src/timeparse/core.py has been updated successfully."
+        }
+      ]
+    },
+    {
+      "output": "Re-running the tests.\n<tool_call>{\"name\": \"bash\", \"arguments\": {\"command\": \"python -m pytest -q tests\"}}</tool_call>",
+      "observations": [
+        {
+          "tool": "bash",
+          "text": "============================= test session starts ==============================\ncollected 9 items\n\ntests/test_core.py ....F....                                             [100%]\n\n=================================== FAILURES ===================================\n_______________________________ test_whitespace ________________________________\n\n    def test_whitespace():\n>       assert parse_duration(\"1h 30m\") == 5400\n\nsrc/timeparse/core.py:22: in parse_duration\n    raise ValueError(f\"invalid duration {text!r}\")\nE   ValueError: invalid duration '1h 30m'\n\ntests/test_core.py:20: ValueError\n=========================== short test summary info ============================\nFAILED tests/test_core.py::test_whitespace - ValueError: invalid duration '1h 30m'\n========================= 1 failed, 8 passed in 0.03s =========================="
+        }
+      ]
+    },
+    {
+      "output": "One failure is left: spaces between units. Re-reading the start of the function.\n<tool_call>{\"name\": \"read\", \"arguments\": {\"path\": \"src/timeparse/core.py\", \"offset\": 9, \"limit\": 20}}</tool_call>",
+      "observations": [
+        {
+          "tool": "read",
+          "text": "     9\tdef parse_duration(text: str) -> int:\n    10\t    \"\"\"Return the number of seconds in ``text``.\n    11\t\n    12\t    >>> parse_duration(\"90s\")\n    13\t    90\n    14\t    \"\"\"\n    15\t    if not text:\n    16\t        raise ValueError(\"empty duration\")\n    17\t    pos = 0\n    18\t    total = 0\n    19\t    for match in _TOKEN.finditer(text):\n    20\t        if match.start() != pos:\n    21\t            raise ValueError(f\"invalid duration {text!r}\")\n    22\t        value, unit = match.groups()\n    23\t        total += int(value) * UNIT_SECONDS[unit]\n    24\t        pos = match.end()\n    25\t    if pos != len(text):\n    26\t        raise ValueError(f\"invalid duration {text!r}\")\n    27\t    return total\n    28\t"
+        }
+      ]
+    },
+    {
+      "output": "I'll strip all whitespace before matching.\n<tool_call>{\"name\": \"edit\", \"arguments\": {\"path\": \"src/timeparse/core.py\", \"old\": \"        raise ValueError(\\\"empty duration\\\")\\n    pos = 0\", \"new\": \"        raise ValueError(\\\"empty duration\\\")\\n    text = \\\"\\\".join(text.split())\\n    pos = 0\"}}</tool_call>",
+      "observations": [
+        {
+          "tool": "edit",
+          "text": "The file src/timeparse/core.py has been updated successfully."
+        }
+      ]
+    },
+    {
+      "output": "Running the tests again.\n<tool_call>{\"name\": \"bash\", \"arguments\": {\"command\": \"python -m pytest -q tests\"}}</tool_call>",
+      "observations": [
+        {
+          "tool": "bash",
+          "text": "============================= test session starts ==============================\ncollected 9 items\n\ntests/test_core.py .........                                             [100%]\n\n============================== 9 passed in 0.02s ==============================="
+        }
+      ]
+    },
+    {
+      "output": "All nine pass. I'll add a regression test for irregular spacing; first a look at the existing tests for their style.\n<tool_call>{\"name\": \"read\", \"arguments\": {\"path\": \"tests/test_core.py\"}}</tool_call>",
+      "observations": [
+        {
+          "tool": "read",
+          "text": "     1\timport pytest\n     2\t\n     3\tfrom timeparse import parse_duration, format_duration\n     4\t\n     5\t\n     6\tdef test_seconds():\n     7\t    assert parse_duration(\"90s\") == 90\n     8\t\n     9\t\n    10\tdef test_hours_and_minutes():\n    11\t    assert parse_duration(\"1h30m\") == 5400\n    12\t\n    13\t\n    14\tdef test_all_units():\n    15\t    assert parse_duration(\"2h5m7s\") == 7507\n    16\t\n    17\t\n    18\tdef test_whitespace():\n    19\t    assert parse_duration(\"1h 30m\") == 5400\n    20\t\n    21\t\n    22\tdef test_rejects_garbage():\n    23\t    with pytest.raises(ValueError):\n    24\t        parse_duration(\"abc\")\n    25\t\n    26\t\n    27\tdef test_rejects_empty():\n    28\t    with pytest.raises(ValueError):\n    29\t        parse_duration(\"\")\n    30\t\n    31\t\n    32\tdef test_format_roundtrip():\n    33\t    assert format_duration(parse_duration(\"2h5m7s\")) == \"2h5m7s\"\n    34\t\n    35\t\n    36\tdef test_format_zero():\n    37\t    assert format_duration(0) == \"0s\"\n    38\t\n    39\t\n    40\tdef test_format_minutes():\n    41\t    assert format_duration(5400) == \"1h30m\""
+        }
+      ]
+    },
+    {
+      "output": "Writing the regression tests to a new file.\n<tool_call>{\"name\": \"write\", \"arguments\": {\"path\": \"tests/test_spacing.py\", \"content\": \"from timeparse import parse_duration\\n\\n\\ndef test_mixed_spacing():\\n    assert parse_duration(\\\" 2h  5m 7s \\\") == 7507\\n\\n\\ndef test_tabs_and_newlines():\\n    assert parse_duration(\\\"1h\\\\t30m\\\\n\\\") == 5400\\n\"}}</tool_call>",
+      "observations": [
+        {
+          "tool": "write",
+          "text": "The file tests/test_spacing.py has been created successfully."
+        }
+      ]
+    },
+    {
+      "output": "Running the full suite.\n<tool_call>{\"name\": \"bash\", \"arguments\": {\"command\": \"python -m pytest -q tests\"}}</tool_call>",
+      "observations": [
+        {
+          "tool": "bash",
+          "text": "============================= test session starts ==============================\ncollected 11 items\n\ntests/test_core.py .........                                             [ 81%]\ntests/test_spacing.py ..                                                 [100%]\n\n============================== 11 passed in 0.03s ==============================="
+        }
+      ]
+    },
+    {
+      "output": "Checking the new test file once more before wrapping up.\n<tool_call>{\"name\": \"read\", \"arguments\": {\"path\": \"tests/test_spacing.py\"}}</tool_call>",
+      "observations": [
+        {
+          "tool": "read",
+          "text": "     1\tfrom timeparse import parse_duration\n     2\t\n     3\t\n     4\tdef test_mixed_spacing():\n     5\t    assert parse_duration(\" 2h  5m 7s \") == 7507\n     6\t\n     7\t\n     8\tdef test_tabs_and_newlines():\n     9\t    assert parse_duration(\"1h\\t30m\\n\") == 5400"
+        }
+      ]
+    },
+    {
+      "output": "Reviewing the final diff of the source change.\n<tool_call>{\"name\": \"bash\", \"arguments\": {\"command\": \"git diff\"}}</tool_call>",
+      "observations": [
+        {
+          "tool": "bash",
+          "text": "diff --git a/src/timeparse/core.py b/src/timeparse/core.py\nindex 3f1c2ab..9d04e7e 100644\n--- a/src/timeparse/core.py\n+++ b/src/timeparse/core.py\n@@ -15,6 +15,7 @@ def parse_duration(text: str) -> int:\n     if not text:\n         raise ValueError(\"empty duration\")\n+    text = \"\".join(text.split())\n     pos = 0\n     total = 0\n     for match in _TOKEN.finditer(text):\n@@ -21,7 +22,7 @@ def parse_duration(text: str) -> int:\n             raise ValueError(f\"invalid duration {text!r}\")\n         value, unit = match.groups()\n-        total = int(value) * UNIT_SECONDS[unit]\n+        total += int(value) * UNIT_SECONDS[unit]\n         pos = match.end()\n     if pos != len(text):\n         raise ValueError(f\"invalid duration {text!r}\")"
+        }
+      ]
+    },
+    {
+      "output": "Done. `parse_duration` now accumulates every unit and ignores whitespace; two new regression tests cover irregular spacing, and all 11 tests pass.",
+      "observations": []
+    }
+  ]
+}

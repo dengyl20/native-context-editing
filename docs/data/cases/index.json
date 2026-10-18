@@ -1,0 +1,80 @@
+{
+ "cases": [
+  {
+   "id": "tune-mjcf",
+   "file": "tune-mjcf.json",
+   "title": "Tuning a MuJoCo model inside a 48K budget",
+   "benchmark": "Terminal-Bench 2.0",
+   "harness": "Terminus-2",
+   "budget_tokens": 49152,
+   "solved": true,
+   "baselines": {"Comp.": false, "Tools": false},
+   "paper_ref": "Appendix E",
+   "description": "NCE folds finished tuning experiments into notes, peaks at 35.1K tokens (54.0K without editing), and solves a task that both baselines fail.",
+   "turns": 49,
+   "edit_turns": 4,
+   "ops": {"drop": 11, "rewrite": 30, "append": 3},
+   "peak_tokens": 35086,
+   "peak_tokens_without_edits": 54015,
+   "excerpt": false
+  },
+  {
+   "id": "django-14855",
+   "file": "django-14855.json",
+   "title": "Fixing a Django admin URL bug under Claude Code",
+   "benchmark": "SWE-bench Verified",
+   "harness": "Claude Code",
+   "budget_tokens": 262144,
+   "solved": true,
+   "baselines": null,
+   "paper_ref": "Appendix E",
+   "description": "Two unprompted editing turns fold a finished reproduction phase into one note and rewrite spent reads, keeping the peak at 75.7K tokens (123.6K without editing).",
+   "turns": 74,
+   "edit_turns": 2,
+   "ops": {"drop": 30, "rewrite": 23, "append": 1},
+   "peak_tokens": 75734,
+   "peak_tokens_without_edits": 123551,
+   "excerpt": false
+  },
+  {
+   "id": "valkey-790",
+   "file": "valkey-790.json",
+   "title": "One editing turn, executed: fixing CLUSTER SHARDS in Valkey",
+   "benchmark": "SWE-bench Multilingual",
+   "harness": "Claude Code",
+   "budget_tokens": 262144,
+   "solved": false,
+   "baselines": null,
+   "paper_ref": "Appendix A",
+   "description": "The worked example of Appendix A: one unprompted turn of 14 edits takes the blocks from 41.1K to 29.0K tokens. Excerpt of the first 31 turns.",
+   "turns": 31,
+   "edit_turns": 1,
+   "ops": {"drop": 10, "rewrite": 4, "append": 0},
+   "peak_tokens": 49997,
+   "peak_tokens_without_edits": 58381,
+   "excerpt": true
+  },
+  {
+   "id": "large-scale-text-editing",
+   "file": "large-scale-text-editing.json",
+   "title": "Writing Vim macros for a million-row CSV inside a 48K budget",
+   "benchmark": "Terminal-Bench 2.0",
+   "harness": "Terminus-2",
+   "budget_tokens": 49152,
+   "solved": true,
+   "baselines": {"Comp.": false, "Tools": false},
+   "paper_ref": null,
+   "description": "Four editing turns, three of them after a soft reminder, keep a long Vim-macro search at a 40.2K-token peak while the unedited history reaches 50.0K, past the 48K budget.",
+   "turns": 54,
+   "edit_turns": 4,
+   "ops": {"drop": 33, "rewrite": 11, "append": 2},
+   "peak_tokens": 40214,
+   "peak_tokens_without_edits": 49973,
+   "excerpt": false
+  }
+ ],
+ "reminders": {
+  "soft": "[context-monitor] Your context has grown sizeable; this is a good moment to tidy it up. If anything in it is no longer needed, condense or remove all of it in one pass — clear out everything that has served its purpose and leave the rest untouched; do not trim a little and save the rest for later. If there is very little worth cleaning up, or everything is still in use, you may explain why and decline — that is a reasonable choice.",
+  "hard": "[context-monitor] Your context is close to its limit and must be cleaned up now. Before anything else this turn, condense or remove everything that is no longer needed — clear all of it out and leave what you still rely on untouched. This is not optional; only if there is genuinely nothing that can be cleaned up may you explain why and skip it."
+ }
+}

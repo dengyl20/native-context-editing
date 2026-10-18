@@ -1,0 +1,71 @@
+{
+ "name": "session_after_turn_3",
+ "description": "A session after one editing turn: a receipt dropped, a read rewritten, a note appended, and the action of the turn recorded.",
+ "state": {
+  "items": [
+   {
+    "type": "block",
+    "address": 0,
+    "role": "system",
+    "text": "You are a coding agent working in a repository at /workspace.",
+    "locked": true
+   },
+   {
+    "type": "block",
+    "address": 1,
+    "role": "user",
+    "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+   },
+   {
+    "type": "block",
+    "address": 2,
+    "role": "tool",
+    "text": "The parser at src/timeparse/core.py, lines 9-27: it accumulates per unit and the unit table is correct.",
+    "tool_name": "grep",
+    "history": [
+     "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]"
+    ]
+   },
+   {
+    "type": "block",
+    "address": 4,
+    "role": "tool",
+    "text": "9 passed in 0.02s",
+    "tool_name": "bash"
+   },
+   {
+    "type": "block",
+    "address": 5,
+    "role": "note",
+    "text": "The fix is in and the suite passes."
+   },
+   {
+    "type": "action",
+    "text": "The loop overwrote the total instead of accumulating it."
+   }
+  ],
+  "retired": [
+   3
+  ],
+  "next_address": 6
+ },
+ "rendered": "<sid_hi_00><sid_lo_00><m_ro><|system|>You are a coding agent working in a repository at /workspace.\n<sid_hi_00><sid_lo_01><|user|>The failing test expects parse_duration(\"1h30m\") == 5400.\n<sid_hi_00><sid_lo_02><|tool|>grep\nThe parser at src/timeparse/core.py, lines 9-27: it accumulates per unit and the unit table is correct.\n<sid_hi_00><sid_lo_04><|tool|>bash\n9 passed in 0.02s\n<sid_hi_00><sid_lo_05><|note|>The fix is in and the suite passes.\n<|assistant|>The loop overwrote the total instead of accumulating it.<|end|>\n",
+ "expected": {
+  "live_addresses": [
+   0,
+   1,
+   2,
+   4,
+   5
+  ],
+  "retired": [
+   3
+  ],
+  "next_address": 6,
+  "counts": {
+   "blocks": 5,
+   "actions": 1,
+   "reminders": 0
+  }
+ }
+}

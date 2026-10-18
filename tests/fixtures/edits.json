@@ -1,0 +1,1833 @@
+{
+ "name": "edit_cases",
+ "description": "Scripted model outputs run against the session fixture, one per rule of spec/grammar.md and spec/semantics.md.",
+ "initial_state": {
+  "items": [
+   {
+    "type": "block",
+    "address": 0,
+    "role": "system",
+    "text": "You are a coding agent working in a repository at /workspace.",
+    "locked": true
+   },
+   {
+    "type": "block",
+    "address": 1,
+    "role": "user",
+    "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+   },
+   {
+    "type": "block",
+    "address": 2,
+    "role": "tool",
+    "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+    "tool_name": "grep"
+   },
+   {
+    "type": "block",
+    "address": 3,
+    "role": "tool",
+    "text": "The file src/timeparse/core.py has been updated successfully.",
+    "tool_name": "edit"
+   },
+   {
+    "type": "block",
+    "address": 4,
+    "role": "tool",
+    "text": "9 passed in 0.02s",
+    "tool_name": "bash"
+   }
+  ],
+  "retired": [],
+  "next_address": 5
+ },
+ "cases": [
+  {
+   "name": "drop_one",
+   "note": "A plain drop of a live block, with the rationale kept around it.",
+   "output": "Tidying up.\n<ctx><op_drop><sid_hi_00><sid_lo_02></ctx>",
+   "action_text": "Tidying up.",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "drop",
+      "addresses": [
+       2
+      ]
+     },
+     "status": "applied"
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [
+     2
+    ],
+    "next_address": 5
+   }
+  },
+  {
+   "name": "drop_many",
+   "note": "One envelope naming two blocks; both are removed.",
+   "output": "<ctx><op_drop><sid_hi_00><sid_lo_02><sid_hi_00><sid_lo_04></ctx>",
+   "action_text": "",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "drop",
+      "addresses": [
+       2,
+       4
+      ]
+     },
+     "status": "applied"
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     }
+    ],
+    "retired": [
+     2,
+     4
+    ],
+    "next_address": 5
+   }
+  },
+  {
+   "name": "drop_repeated_address",
+   "note": "A repeated address counts once.",
+   "output": "<ctx><op_drop><sid_hi_00><sid_lo_02><sid_hi_00><sid_lo_02></ctx>",
+   "action_text": "",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "drop",
+      "addresses": [
+       2,
+       2
+      ]
+     },
+     "status": "applied"
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [
+     2
+    ],
+    "next_address": 5
+   }
+  },
+  {
+   "name": "rewrite_live",
+   "note": "A rewrite keeps the address and replaces the text.",
+   "output": "<ctx><op_rewrite><sid_hi_00><sid_lo_02> The parser at src/timeparse/core.py, lines 9-27, accumulates per unit.</ctx>",
+   "action_text": "",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "rewrite",
+      "address": 2,
+      "text": "The parser at src/timeparse/core.py, lines 9-27, accumulates per unit."
+     },
+     "status": "applied"
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "The parser at src/timeparse/core.py, lines 9-27, accumulates per unit.",
+      "tool_name": "grep",
+      "history": [
+       "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]"
+      ]
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   }
+  },
+  {
+   "name": "append",
+   "note": "An append takes the next address.",
+   "output": "<ctx><op_append> The fix is in and the suite passes.</ctx>",
+   "action_text": "",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "append",
+      "text": "The fix is in and the suite passes."
+     },
+     "status": "applied",
+     "new_address": 5
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     },
+     {
+      "type": "block",
+      "address": 5,
+      "role": "note",
+      "text": "The fix is in and the suite passes."
+     }
+    ],
+    "retired": [],
+    "next_address": 6
+   }
+  },
+  {
+   "name": "three_edits_in_order",
+   "note": "Edits run in the order they were written.",
+   "output": "<ctx><op_append> tested </ctx><ctx><op_drop><sid_hi_00><sid_lo_03></ctx><ctx><op_rewrite><sid_hi_00><sid_lo_02> a summary of the read </ctx>",
+   "action_text": "",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "append",
+      "text": "tested"
+     },
+     "status": "applied",
+     "new_address": 5
+    },
+    {
+     "edit": {
+      "op": "drop",
+      "addresses": [
+       3
+      ]
+     },
+     "status": "applied"
+    },
+    {
+     "edit": {
+      "op": "rewrite",
+      "address": 2,
+      "text": "a summary of the read"
+     },
+     "status": "applied"
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "a summary of the read",
+      "tool_name": "grep",
+      "history": [
+       "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]"
+      ]
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     },
+     {
+      "type": "block",
+      "address": 5,
+      "role": "note",
+      "text": "tested"
+     }
+    ],
+    "retired": [
+     3
+    ],
+    "next_address": 6
+   }
+  },
+  {
+   "name": "locked_block",
+   "note": "The locked system prompt may not be dropped.",
+   "output": "<ctx><op_drop><sid_hi_00><sid_lo_00></ctx>",
+   "action_text": "",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "drop",
+      "addresses": [
+       0
+      ]
+     },
+     "status": "rejected",
+     "reason": "locked"
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   }
+  },
+  {
+   "name": "locked_block_blocks_the_others",
+   "note": "A locked target blocks the whole edit, so the live target survives.",
+   "output": "<ctx><op_drop><sid_hi_00><sid_lo_02><sid_hi_00><sid_lo_00></ctx>",
+   "action_text": "",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "drop",
+      "addresses": [
+       2,
+       0
+      ]
+     },
+     "status": "rejected",
+     "reason": "locked"
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   }
+  },
+  {
+   "name": "unknown_address",
+   "note": "The address was never issued.",
+   "output": "<ctx><op_drop><sid_hi_03><sid_lo_03></ctx>",
+   "action_text": "",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "drop",
+      "addresses": [
+       99
+      ]
+     },
+     "status": "rejected",
+     "reason": "unknown_address"
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   }
+  },
+  {
+   "name": "retired_address",
+   "note": "The first drop retires the address; the second, written differently, is not_live.",
+   "output": "<ctx><op_drop><sid_hi_00><sid_lo_03></ctx><ctx><op_drop> <sid_hi_00><sid_lo_03> </ctx>",
+   "action_text": "",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "drop",
+      "addresses": [
+       3
+      ]
+     },
+     "status": "applied"
+    },
+    {
+     "edit": {
+      "op": "drop",
+      "addresses": [
+       3
+      ]
+     },
+     "status": "rejected",
+     "reason": "not_live"
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [
+     3
+    ],
+    "next_address": 5
+   }
+  },
+  {
+   "name": "duplicate_verbatim",
+   "note": "The envelope repeats verbatim, so it executes once.",
+   "output": "<ctx><op_drop><sid_hi_00><sid_lo_02></ctx><ctx><op_drop><sid_hi_00><sid_lo_02></ctx>",
+   "action_text": "",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "drop",
+      "addresses": [
+       2
+      ]
+     },
+     "status": "applied"
+    },
+    {
+     "edit": {
+      "op": "drop",
+      "addresses": [
+       2
+      ]
+     },
+     "status": "rejected",
+     "reason": "duplicate"
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [
+     2
+    ],
+    "next_address": 5
+   }
+  },
+  {
+   "name": "malformed_missing_address",
+   "note": "A drop with no address.",
+   "output": "<ctx><op_drop></ctx>",
+   "action_text": "",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "malformed",
+      "reason": "missing_address",
+      "raw": "<ctx><op_drop></ctx>"
+     },
+     "status": "rejected",
+     "reason": "missing_address"
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   }
+  },
+  {
+   "name": "malformed_bad_address",
+   "note": "A high digit with no low digit.",
+   "output": "<ctx><op_drop><sid_hi_03></ctx>",
+   "action_text": "",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "malformed",
+      "reason": "bad_address",
+      "raw": "<ctx><op_drop><sid_hi_03></ctx>"
+     },
+     "status": "rejected",
+     "reason": "bad_address"
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   }
+  },
+  {
+   "name": "malformed_empty_text",
+   "note": "An append with no text.",
+   "output": "<ctx><op_append>   </ctx>",
+   "action_text": "",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "malformed",
+      "reason": "empty_text",
+      "raw": "<ctx><op_append>   </ctx>"
+     },
+     "status": "rejected",
+     "reason": "empty_text"
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   }
+  },
+  {
+   "name": "malformed_token_in_text",
+   "note": "A token inside the append text.",
+   "output": "<ctx><op_append> a note <op_drop> with a token inside</ctx>",
+   "action_text": "",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "malformed",
+      "reason": "token_in_text",
+      "raw": "<ctx><op_append> a note <op_drop> with a token inside</ctx>"
+     },
+     "status": "rejected",
+     "reason": "token_in_text"
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   }
+  },
+  {
+   "name": "malformed_unexpected_content",
+   "note": "Trailing text after a drop list.",
+   "output": "<ctx><op_drop><sid_hi_00><sid_lo_02> trailing words</ctx>",
+   "action_text": "",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "malformed",
+      "reason": "unexpected_content",
+      "raw": "<ctx><op_drop><sid_hi_00><sid_lo_02> trailing words</ctx>"
+     },
+     "status": "rejected",
+     "reason": "unexpected_content"
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   }
+  },
+  {
+   "name": "rewrite_of_a_dead_block",
+   "note": "The second envelope rewrites a block the first one dropped: kept as a note.",
+   "output": "<ctx><op_drop><sid_hi_00><sid_lo_03></ctx><ctx><op_rewrite><sid_hi_00><sid_lo_03> summary of the receipt </ctx>",
+   "action_text": "",
+   "stray_tokens": 0,
+   "results": [
+    {
+     "edit": {
+      "op": "drop",
+      "addresses": [
+       3
+      ]
+     },
+     "status": "applied"
+    },
+    {
+     "edit": {
+      "op": "rewrite",
+      "address": 3,
+      "text": "summary of the receipt"
+     },
+     "status": "applied_as_append",
+     "reason": "not_live",
+     "new_address": 5
+    }
+   ],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     },
+     {
+      "type": "block",
+      "address": 5,
+      "role": "note",
+      "text": "summary of the receipt"
+     }
+    ],
+    "retired": [
+     3
+    ],
+    "next_address": 6
+   }
+  },
+  {
+   "name": "stray_token",
+   "note": "A token outside any envelope is discarded and counted.",
+   "output": "I will drop it later. <op_drop> For now I run the suite.",
+   "action_text": "I will drop it later.  For now I run the suite.",
+   "stray_tokens": 1,
+   "results": [],
+   "state_before": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   },
+   "state_after": {
+    "items": [
+     {
+      "type": "block",
+      "address": 0,
+      "role": "system",
+      "text": "You are a coding agent working in a repository at /workspace.",
+      "locked": true
+     },
+     {
+      "type": "block",
+      "address": 1,
+      "role": "user",
+      "text": "The failing test expects parse_duration(\"1h30m\") == 5400."
+     },
+     {
+      "type": "block",
+      "address": 2,
+      "role": "tool",
+      "text": "src/timeparse/core.py:19: total = int(value) * UNIT_SECONDS[unit]",
+      "tool_name": "grep"
+     },
+     {
+      "type": "block",
+      "address": 3,
+      "role": "tool",
+      "text": "The file src/timeparse/core.py has been updated successfully.",
+      "tool_name": "edit"
+     },
+     {
+      "type": "block",
+      "address": 4,
+      "role": "tool",
+      "text": "9 passed in 0.02s",
+      "tool_name": "bash"
+     }
+    ],
+    "retired": [],
+    "next_address": 5
+   }
+  }
+ ]
+}

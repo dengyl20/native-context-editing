@@ -1,0 +1,58 @@
+cff-version: 1.2.0
+message: "If you use this software or the method it implements, please cite the paper."
+title: "Native Context Editing: a grammar of dedicated special tokens for editing an LLM agent's own context"
+abstract: >-
+  Reference implementation of Native Context Editing (NCE). The context is an
+  ordered list of addressable blocks; the model emits edits written in a grammar
+  of dedicated special tokens, and a task-agnostic runtime executes them at the
+  end of the turn. This repository ships the grammar, the runtime, the annotation
+  reference implementation, and worked examples. It does not include the paper's
+  training stack or data.
+type: software
+license: MIT
+version: "0.1.0"
+date-released: "2026-10-16"
+repository-code: "https://github.com/dengyl20/native-context-editing"
+url: "https://dengyl20.github.io/native-context-editing/"
+keywords:
+  - context editing
+  - long-horizon agents
+  - LLM agents
+  - agentic context management
+  - special tokens
+authors:
+  - family-names: Deng
+    given-names: Yunlong
+  - family-names: Li
+    given-names: Yan
+  - family-names: Hu
+    given-names: Xing
+  - family-names: Zhu
+    given-names: Yida
+  - family-names: Du
+    given-names: Sean
+  - family-names: Liu
+    given-names: Weiyang
+  - family-names: Chen
+    given-names: Guangyi
+preferred-citation:
+  type: article
+  title: "Editing as Language: Teaching LLM Agents a Grammar for Native Context Editing"
+  authors:
+    - family-names: Deng
+      given-names: Yunlong
+    - family-names: Li
+      given-names: Yan
+    - family-names: Hu
+      given-names: Xing
+    - family-names: Zhu
+      given-names: Yida
+    - family-names: Du
+      given-names: Sean
+    - family-names: Liu
+      given-names: Weiyang
+    - family-names: Chen
+      given-names: Guangyi
+  year: 2026
+  # TODO before publication: replace XXXX.XXXXX with the arXiv identifier.
+  url: "https://arxiv.org/abs/XXXX.XXXXX"

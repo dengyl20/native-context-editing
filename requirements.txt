@@ -1,0 +1,4 @@
+# No third-party packages are required.
+#
+# The reference implementation, the examples and the test suite use only the
+# Python standard library. Python 3.9 or newer.

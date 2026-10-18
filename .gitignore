@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# The pre-publication leak scan. It is a local gate, not part of the release:
+# it encodes the internal host and path patterns it looks for, so it stays out
+# of the public tree. publish.sh runs it from the working copy before the commit.
+tools/
+
+# LaTeX / build leftovers in docs
+docs/*.aux
+docs/*.log

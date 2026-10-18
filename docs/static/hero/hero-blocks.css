@@ -1,0 +1,149 @@
+/* ==========================================================================
+   NCE — hero background, page-side styles
+   --------------------------------------------------------------------------
+   Pairs with hero-blocks.js. Three things happen here:
+
+     1. the canvas is pinned behind the hero's own content;
+     2. a scrim sits between the canvas and the text, dimming the middle of
+        the hero where the headline and the author line live;
+     3. the bottom of the band fades into the paper so the hero has no hard
+        edge where the teaser begins.
+
+   Everything is namespaced under .hero-bg / .hero--bg, so linking this file
+   cannot disturb anything else on the page. All knobs are custom properties
+   listed in the README; the two that matter most are --hero-veil-color and
+   --hero-veil-size.
+   ========================================================================== */
+
+/* The hero needs a positioning context for the absolutely-placed layer. */
+.hero--bg { position: relative; isolation: isolate; }
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+
+  /* --- knobs (override these anywhere on the page) --------------------- */
+  /* Kept deliberately quiet on the light theme: the field is texture behind
+     the title, not a wall of cards. A strong wash plus low opacity lets the
+     blocks read as drifting depth without competing with the headline. */
+  --hero-field-opacity: 0.55;              /* whole layer, 0 … 1 */
+  --hero-veil-color: rgba(251, 250, 247, 0.74);  /* --paper at 74% */
+  --hero-veil-size: 62% 52%;               /* radial wash around the title */
+  --hero-veil-fade: 58%;                   /* where the bottom fade starts */
+}
+
+.hero-bg canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: var(--hero-field-opacity);
+}
+
+/* Text legibility. The radial wash is centred on the headline; the linear
+   fade hands the band back to the page ground just above the teaser. */
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(var(--hero-veil-size) at 50% 42%,
+      var(--hero-veil-color) 0%,
+      transparent 72%),
+    linear-gradient(to bottom,
+      transparent var(--hero-veil-fade),
+      var(--paper) 100%);
+}
+
+/* Keep the hero's own children above the layer. */
+.hero--bg > .shell,
+.hero--bg > .hero-bg ~ * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Dark theme: the same idea on the navy ground. Keyed off the attribute the
+   site's toggle writes, and off the OS preference when nothing is chosen. */
+:root[data-theme="dark"] .hero-bg {
+  --hero-veil-color: rgba(13, 20, 36, 0.68);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .hero-bg {
+    --hero-veil-color: rgba(13, 20, 36, 0.68);
+  }
+}
+
+/* Phones: smaller band, so a slightly stronger wash and a slower field. */
+@media (max-width: 40rem) {
+  .hero-bg {
+    /* The stacked headline fills the width, so the wash has to cover the
+       whole band; the field stays a shade quieter so the cards read as
+       texture at the edges rather than as table columns. */
+    --hero-veil-size: 118% 78%;
+    --hero-veil-color: rgba(251, 250, 247, 0.62);
+    --hero-field-opacity: 0.6;
+  }
+  :root[data-theme="dark"] .hero-bg {
+    --hero-veil-color: rgba(13, 20, 36, 0.74);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]):not([data-theme="dark"]) .hero-bg {
+      --hero-veil-color: rgba(13, 20, 36, 0.74);
+    }
+  }
+}
+
+/* Print and forced-colors: no animation, no veil — the page prints as type. */
+@media print {
+  .hero-bg { display: none; }
+}
+
+@media (forced-colors: active) {
+  .hero-bg { display: none; }
+}
+
+/* ==========================================================================
+   The LongCat mark, in colour
+   --------------------------------------------------------------------------
+   site.css draws every .logo as a single-colour mask filled with --ink, which
+   is right for a wordmark and wrong for the cat: the mark ships in two tones
+   (green cat, near-black lettering) and the mask throws the green away.
+
+   This block replaces the mask with the real artwork as a background image.
+   It is loaded after site.css, so equal-specificity selectors win on order,
+   and it keys off the same theme signals the rest of the page uses. Nothing
+   in index.html or site.css changes.
+
+   In dark it switches to the cut with white lettering; the cat stays green.
+   ========================================================================== */
+
+/* Selectors are written as `html .logo` and friends so they out-rank the
+   plain `.logo` rules in site.css on specificity rather than on load order —
+   site.css also fills its rule with the ink colour and a mask, and only an
+   override that wins outright will clear both. */
+html .logo {
+  background-color: transparent !important;
+  background-image: url("../../assets/longcat-logo.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  -webkit-mask: none !important;
+  mask: none !important;
+}
+
+html:root[data-theme="dark"] .logo {
+  background-image: url("../../assets/longcat-logo-dark.svg");
+}
+
+html:root:not([data-theme="light"]):not([data-theme="dark"]) .logo {
+  background-image: url("../../assets/longcat-logo.svg");
+}
+
+@media (prefers-color-scheme: dark) {
+  html:root:not([data-theme="light"]):not([data-theme="dark"]) .logo {
+    background-image: url("../../assets/longcat-logo-dark.svg");
+  }
+}

@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Native Context Editing — Editing as Language</title>
+<meta name="description" content="NCE gives an LLM agent a grammar of dedicated special tokens for editing its own context as it generates, so context management becomes part of the model's own language.">
+<!-- Set before first paint so the reveal animations only ever arm when
+     scripting is on; with it off the page renders fully visible. -->
+<script>document.documentElement.classList.add("js");</script>
+
+<!-- ==========================================================================
+     CONFIG — everything a maintainer needs to edit lives in this block.
+     Replace the arXiv id and the link constants once the paper is posted.
+     ========================================================================== -->
+<script>
+  window.NCE = {
+    title: "Editing as Language: Teaching LLM Agents a Grammar for Native Context Editing",
+    // How the title breaks on the page. `title` stays the canonical string for
+    // <title> and the citation; these are the display lines, set by hand so the
+    // colon lands on its own line and the widest line stays under the shell.
+    titleLines: [
+      "Editing as Language:",
+      "Teaching LLM Agents a Grammar",
+      "for Native Context Editing"
+    ],
+    shortTitle: "Native Context Editing",
+    method: "NCE",
+
+    links: {
+      paper:   "",                                        // e.g. "paper.pdf" once you host a copy
+      arxiv:   "https://arxiv.org/abs/XXXX.XXXXX",        // <-- replace XXXXX.XXXXX
+      code:    "https://github.com/dengyl20/native-context-editing",
+      demo:    "demo.html",
+      video:   "static/videos/nce.mp4?v=3",
+      poster:  "static/videos/nce-poster.jpg?v=3"
+    },
+
+    authors: [
+      { name: "Yunlong Deng", url: "https://openreview.net/profile?id=~Yunlong_Deng1", affil: [1,3], markers: ["*"] },
+      { name: "Yan Li",       url: "https://openreview.net/profile?id=~Yan_Li44",      affil: [2],   markers: ["*"] },
+      { name: "Xing Hu",      url: "https://openreview.net/profile?id=~Xing_Hu7",      affil: [3],   markers: [] },
+      { name: "Yida Zhu",     url: "https://openreview.net/profile?id=~Yida_Zhu1",     affil: [3],   markers: [] },
+      { name: "Sean Du",      url: "https://openreview.net/profile?id=~Sean_Du1",      affil: [2],   markers: [] },
+      { name: "Weiyang Liu",  url: "https://openreview.net/profile?id=~Weiyang_Liu1",  affil: [1],   markers: ["†"] },
+      { name: "Guangyi Chen", url: "https://openreview.net/profile?id=~Guangyi_Chen1", affil: [4,5], markers: ["†"] }
+    ],
+    affiliations: [
+      { n: 1, text: "The Chinese University of Hong Kong" },
+      { n: 2, text: "Nanyang Technological University" },
+      { n: 3, text: "Meituan LongCat Team" },
+      { n: 4, text: "Mohamed bin Zayed University of Artificial Intelligence" },
+      { n: 5, text: "Carnegie Mellon University" }
+    ],
+    notes: [
+      { marker: "*", text: "Equal contribution." },
+      { marker: "†", text: "Corresponding authors." }
+    ]
+  };
+</script>
+
+<link rel="stylesheet" href="static/fonts.css">
+<link rel="stylesheet" href="static/tokens.css">
+<link rel="stylesheet" href="static/site.css">
+<link rel="stylesheet" href="static/hero/hero-blocks.css">
+<link rel="icon" href="static/img/favicon.svg" type="image/svg+xml">
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ---------------------------------------------------------------- header -->
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="site-header__mark" href="#top">
+      <span class="logo logo--header" role="img" aria-label="LongCat"></span>
+      <span data-bind="method">NCE</span>
+    </a>
+    <nav class="site-nav" aria-label="Sections">
+      <a href="#idea">Idea</a>
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a class="is-optional" href="#citation">Citation</a>
+      <a href="demo.html">Demo</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch colour theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<span id="top"></span>
+
+<!-- ------------------------------------------------------------------ hero -->
+<section class="hero hero--bg">
+  <div class="hero-bg" aria-hidden="true">
+    <canvas data-hero-blocks></canvas>
+  </div>
+  <div class="shell">
+    <span class="logo logo--hero" role="img" aria-label="LongCat"></span>
+    <h1 class="hero__title" data-bind="title">Editing as Language: Teaching LLM Agents a Grammar for Native Context Editing</h1>
+
+    <p class="hero__authors" id="authors"></p>
+    <p class="hero__affil" data-bind="affiliation"></p>
+    <p class="hero__notes" id="notes"></p>
+
+    <div class="hero__links">
+      <a class="btn btn--primary" data-link="arxiv" data-fallback="paper" href="#">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/></svg>
+        <span data-bind="paper-label">Paper</span>
+      </a>
+      <a class="btn" data-link="code" href="#">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg>
+        Code
+      </a>
+      <a class="btn" data-link="demo" href="#">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+        Live demo
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ film
+     The film sits directly under the hero: it is the shortest honest answer
+     to "what is this", and the page should not make a reader scroll three
+     sections to find it. It carries its own heading for the outline, but the
+     visible label stays a compact rail so nothing competes with the hero. -->
+<section class="film" id="video">
+  <div class="shell">
+    <div class="film__rail">
+      <span class="eyebrow">The project film</span>
+      <span class="film__meta">16:9 &middot; 130&nbsp;s &middot; with sound</span>
+    </div>
+
+    <figure class="film__figure">
+      <div class="film__stage" id="pv-stage">
+        <video id="pv" controls preload="metadata" playsinline
+               poster="static/videos/nce-poster.jpg?v=3"
+               aria-label="Project film: Editing as Language, 130 seconds, with sound"
+               width="1920" height="1080">
+          <source src="static/videos/nce.mp4?v=3" type="video/mp4">
+          Your browser cannot play this video. It is also available as
+          <a href="static/videos/nce.mp4?v=3">an MP4 download</a>.
+        </video>
+        <button class="film__play" id="pv-play" type="button"
+                aria-label="Play the project film">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="8 4 21 12 8 20 8 4"/></svg>
+          <span class="film__play-label">Play the film</span>
+        </button>
+        <button class="film__sound" id="pv-sound" type="button" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6.5 9H3v6h3.5L11 19V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          Sound on
+        </button>
+        <div class="film__fallback" id="pv-fallback" hidden>
+          The overview video is not bundled in this build.
+        </div>
+      </div>
+      <figcaption class="film__caption">
+        <h2 class="sr-only">The project film</h2>
+        <p class="film__lede">
+          <span class="film__title">Editing as Language</span> &mdash; one agent, one long task,
+          and the edits it makes along the way: the grammar, a recorded edit turn, and the
+          measurements behind the results.
+        </p>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- -------------------------------------------------------------- teaser -->
+<section class="section section--teaser" id="teaser">
+  <div class="shell">
+    <figure class="teaser reveal">
+      <div class="teaser__frame">
+        <!-- static/img/teaser.svg is the same figure as vector, and stands in
+             automatically if the raster is ever missing. -->
+        <img src="static/img/teaser.png"
+             alt="Before an edit turn, four addressable context blocks: system, task, and two tool outputs. After the turn, one block is rewritten to a note, one is dropped, the first two are kept, and a new note is appended."
+             width="2560" height="800" id="teaser-img">
+        <img src="static/img/teaser.svg" alt="" width="1280" height="434" id="teaser-svg" hidden>
+      </div>
+      <figcaption>
+        Context is an ordered list of blocks, each named by a two-token address. The model emits
+        edits in its own output; a runtime executes them at the end of the turn, so the next
+        prompt is built from the context those edits produce.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ idea -->
+<section class="section" id="idea">
+  <div class="shell">
+    <div class="section__head reveal">
+      <p class="eyebrow">The idea</p>
+      <h2>Context editing, made native</h2>
+      <p class="lead">
+        A rule fires on size alone and cannot tell which information the task still needs. A tool
+        call takes its meaning from a schema the harness declares in the prompt. NCE makes the
+        edit part of the language the model already speaks, so its meaning ships with the model
+        and holds in every harness.
+      </p>
+    </div>
+
+    <div class="pillars reveal">
+      <article class="pillar">
+        <span class="pillar__label">Vocabulary</span>
+        <h3>Dedicated tokens</h3>
+        <p>Seventy reserved tokens name the pieces of an edit. Address tokens name a block;
+           operator tokens say what happens to it.</p>
+        <div class="chips chips--stack">
+          <span class="chip chip--addr"><span class="chip-token">&lt;sid_hi_12&gt;</span><span class="chip-token">&lt;sid_lo_07&gt;</span></span>
+          <span class="chip chip--op chip--drop"><svg class="chip-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg><span class="chip-label">drop</span></span>
+          <span class="chip chip--op chip--rewrite"><svg class="chip-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg><span class="chip-label">rewrite</span></span>
+          <span class="chip chip--op chip--append"><svg class="chip-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/></svg><span class="chip-label">append</span></span>
+        </div>
+      </article>
+
+      <article class="pillar">
+        <span class="pillar__label">Composition rules</span>
+        <h3>Well-formed edits</h3>
+        <p>An edit is one envelope around one operator. The rules are small enough to state in a
+           line each, and a malformed envelope executes as a no-op.</p>
+        <div class="chips chips--stack">
+          <span class="chip chip--env"><span class="chip-token">&lt;ctx&gt;</span></span>
+          <span class="chip chip--env"><span class="chip-token">&lt;/ctx&gt;</span></span>
+        </div>
+      </article>
+
+      <article class="pillar">
+        <span class="pillar__label">Semantics</span>
+        <h3>One edit, one transition</h3>
+        <p>Each well-formed edit binds to exactly one transition of the context state, executed by
+           a task-agnostic runtime, in every harness.</p>
+        <div class="chips chips--stack">
+          <span class="mono">S<sub>t+1</sub> = Execute(S<sub>t</sub>, e<sub>t</sub>)</span>
+        </div>
+      </article>
+    </div>
+
+    <div class="grammar reveal">
+      <div class="grammar__row">
+        <span class="chip chip--op chip--drop grammar__op"><svg class="chip-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg><span class="chip-label">drop</span></span>
+        <span class="grammar__form">
+          <span class="chip chip--env"><span class="chip-token">&lt;ctx&gt;</span></span>
+          <span class="mono">&lt;op_drop&gt;</span>
+          <span class="chip chip--addr"><span class="chip-token">&lt;sid_hi_00&gt;</span><span class="chip-token">&lt;sid_lo_04&gt;</span></span>
+          <span class="chip chip--addr"><span class="chip-token">&lt;sid_hi_00&gt;</span><span class="chip-token">&lt;sid_lo_11&gt;</span></span>
+          <span class="chip chip--env"><span class="chip-token">&lt;/ctx&gt;</span></span>
+          <span class="grammar__note">Remove the listed blocks and retire their addresses for good.</span>
+        </span>
+      </div>
+      <div class="grammar__row">
+        <span class="chip chip--op chip--rewrite grammar__op"><svg class="chip-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg><span class="chip-label">rewrite</span></span>
+        <span class="grammar__form">
+          <span class="chip chip--env"><span class="chip-token">&lt;ctx&gt;</span></span>
+          <span class="mono">&lt;op_rewrite&gt;</span>
+          <span class="chip chip--addr"><span class="chip-token">&lt;sid_hi_00&gt;</span><span class="chip-token">&lt;sid_lo_04&gt;</span></span>
+          <span class="mono">The migration touches three tables&#8230;</span>
+          <span class="chip chip--env"><span class="chip-token">&lt;/ctx&gt;</span></span>
+          <span class="grammar__note">Replace one block&#8217;s text, keeping its address.</span>
+        </span>
+      </div>
+      <div class="grammar__row">
+        <span class="chip chip--op chip--append grammar__op"><svg class="chip-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/></svg><span class="chip-label">append</span></span>
+        <span class="grammar__form">
+          <span class="chip chip--env"><span class="chip-token">&lt;ctx&gt;</span></span>
+          <span class="mono">&lt;op_append&gt;</span>
+          <span class="mono">Suite passes once the cache is cleared first.</span>
+          <span class="chip chip--env"><span class="chip-token">&lt;/ctx&gt;</span></span>
+          <span class="grammar__note">Add the text as a note under a fresh address.</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------------------------------------------------------------- method -->
+<section class="section section--tint" id="method">
+  <div class="shell">
+    <div class="section__head reveal">
+      <p class="eyebrow">Method</p>
+      <h2>From recorded trajectories to a learned editing policy</h2>
+      <p class="lead">
+        Recorded trajectories contain no edits. Two teachers annotate them, and training follows
+        the context as it is edited, so each decision is supervised on the context the agent will
+        actually face.
+      </p>
+    </div>
+
+    <div class="pipeline reveal">
+      <article class="step">
+        <h3>Recorded trajectories</h3>
+        <p>Long-horizon runs from Terminal-Bench and SWE-bench, with no edits of any kind.</p>
+      </article>
+      <article class="step">
+        <h3>Offline release teacher</h3>
+        <p>Reads the full trajectory and assigns each block a release point: the turn after which
+           it may be edited. A block is released only when the teacher can cite the event that
+           ended its use.</p>
+      </article>
+      <article class="step">
+        <h3>Online edit teacher</h3>
+        <p>Sees only the blocks and the release annotations available at that turn, and decides
+           when and how to edit. The edits are therefore safe to learn and executable by an agent
+           that cannot see ahead.</p>
+      </article>
+      <article class="step">
+        <h3>Evolving-context distillation</h3>
+        <p>Each edit executes at the end of the turn that issues it, and every later decision is
+           built on the resulting context, matching inference time exactly.</p>
+      </article>
+      <article class="step">
+        <h3>Deploy</h3>
+        <p>The model generates a turn, the runtime executes the edits it contains, and generation
+           resumes from the edited context.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- --------------------------------------------------------------- results -->
+<section class="section" id="results">
+  <div class="shell">
+    <div class="section__head reveal">
+      <p class="eyebrow">Results</p>
+      <h2>Higher success with fewer tokens</h2>
+      <p class="lead">
+        Evaluated on four long-horizon agentic benchmarks at a 256K budget: Terminal-Bench 2.0,
+        SWE-bench Verified, SWE-bench Multilingual, and SWE-bench Pro.
+      </p>
+    </div>
+
+    <div class="tables reveal">
+      <div class="table-block">
+        <h3>LongCat-Flash-Lite-Sparse</h3>
+        <p class="caption">Success rate (%) and tokens per task (&times;10<sup>6</sup>, 10% trimmed mean over tasks).</p>
+        <div class="table-scroll">
+          <table class="data-table">
+            <caption class="sr-only">LongCat-Flash-Lite-Sparse results at 256K</caption>
+            <thead>
+              <tr>
+                <th scope="col" rowspan="2">Benchmark</th>
+                <th scope="colgroup" colspan="3">Success (%) &uarr;</th>
+                <th scope="colgroup" colspan="3">Tokens (&times;10<sup>6</sup>) &darr;</th>
+              </tr>
+              <tr>
+                <th scope="col">Comp.</th><th scope="col">Tools</th><th scope="col" class="is-nce">NCE</th>
+                <th scope="col">Comp.</th><th scope="col">Tools</th><th scope="col" class="is-nce">NCE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">TB 2.0</th><td>32.6</td><td>32.6</td><td class="is-nce is-nce-cell">38.2<span class="delta">+5.6</span></td><td>6.62</td><td>6.38</td><td class="is-nce is-nce-cell">4.60<span class="delta">&minus;31%</span></td></tr>
+              <tr><th scope="row">SWE Verified</th><td>65.2</td><td>62.4</td><td class="is-nce is-nce-cell">70.0<span class="delta">+4.8</span></td><td>4.07</td><td>3.40</td><td class="is-nce is-nce-cell">2.70<span class="delta">&minus;34%</span></td></tr>
+              <tr><th scope="row">SWE Multilingual</th><td>56.0</td><td>54.3</td><td class="is-nce is-nce-cell">62.3<span class="delta">+6.3</span></td><td>10.83</td><td>10.93</td><td class="is-nce is-nce-cell">6.12<span class="delta">&minus;44%</span></td></tr>
+              <tr><th scope="row">SWE Pro</th><td>39.4</td><td>39.7</td><td class="is-nce is-nce-cell">44.9<span class="delta">+5.5</span></td><td>9.50</td><td>8.46</td><td class="is-nce is-nce-cell">6.42<span class="delta">&minus;32%</span></td></tr>
+            </tbody>
+            <tfoot>
+              <tr><th scope="row">Average</th><td>48.3</td><td>47.3</td><td class="is-nce is-nce-cell">53.9<span class="delta">+5.6</span></td><td>7.76</td><td>7.29</td><td class="is-nce is-nce-cell">4.96<span class="delta">&minus;36%</span></td></tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="table-block">
+        <h3>Qwen3.6-35B-A3B</h3>
+        <p class="caption">The same training recipe transfers to a second base model.</p>
+        <div class="table-scroll">
+          <table class="data-table">
+            <caption class="sr-only">Qwen3.6-35B-A3B results at 256K</caption>
+            <thead>
+              <tr>
+                <th scope="col" rowspan="2">Benchmark</th>
+                <th scope="colgroup" colspan="2">Success (%) &uarr;</th>
+                <th scope="colgroup" colspan="2">Tokens (&times;10<sup>6</sup>) &darr;</th>
+              </tr>
+              <tr>
+                <th scope="col">Comp.</th><th scope="col" class="is-nce">NCE</th>
+                <th scope="col">Comp.</th><th scope="col" class="is-nce">NCE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">TB 2.0</th><td>38.2</td><td class="is-nce is-nce-cell">43.8<span class="delta">+5.6</span></td><td>2.98</td><td class="is-nce is-nce-cell">3.04<span class="delta delta--flat">+2%</span></td></tr>
+              <tr><th scope="row">SWE Verified</th><td>69.8</td><td class="is-nce is-nce-cell">74.0<span class="delta">+4.2</span></td><td>2.92</td><td class="is-nce is-nce-cell">2.19<span class="delta">&minus;25%</span></td></tr>
+              <tr><th scope="row">SWE Multilingual</th><td>58.0</td><td class="is-nce is-nce-cell">64.3<span class="delta">+6.3</span></td><td>5.12</td><td class="is-nce is-nce-cell">4.13<span class="delta">&minus;19%</span></td></tr>
+              <tr><th scope="row">SWE Pro</th><td>43.6</td><td class="is-nce is-nce-cell">45.3<span class="delta">+1.7</span></td><td>5.82</td><td class="is-nce is-nce-cell">4.92<span class="delta">&minus;15%</span></td></tr>
+            </tbody>
+            <tfoot>
+              <tr><th scope="row">Average</th><td>52.4</td><td class="is-nce is-nce-cell">56.9<span class="delta">+4.5</span></td><td>4.21</td><td class="is-nce is-nce-cell">3.57<span class="delta">&minus;15%</span></td></tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="table-block">
+        <h3>Terminal-Bench 2.0 across context budgets</h3>
+        <p class="caption">Success rate (%) for LongCat as the budget shrinks. The advantage over
+          harness compaction widens as the window tightens.</p>
+        <div class="table-scroll">
+          <table class="data-table">
+            <caption class="sr-only">Terminal-Bench 2.0 success rate by budget</caption>
+            <thead>
+              <tr>
+                <th scope="col">Method</th>
+                <th scope="col">256K</th><th scope="col">128K</th><th scope="col">64K</th><th scope="col">48K</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Harness compaction</th><td>32.6</td><td>25.8</td><td>27.0</td><td>20.2</td></tr>
+              <tr><th scope="row">Tool-call editing</th><td>32.6</td><td>30.3</td><td>29.2</td><td>27.0</td></tr>
+              <tr class="is-nce"><th scope="row">NCE</th><td class="is-nce-cell">38.2</td><td class="is-nce-cell">34.8</td><td class="is-nce-cell">32.6</td><td class="is-nce-cell">30.3</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ demo -->
+<section class="section section--tint" id="demo">
+  <div class="shell">
+    <div class="cta-card reveal">
+      <div>
+        <p class="eyebrow">Interactive</p>
+        <h2 style="margin-bottom:var(--space-2)">Watch an edit turn happen</h2>
+        <p class="lead" style="margin-bottom:0">
+          Step through a real run turn by turn: the block list changes as edits execute, the
+          token count falls, and the agent keeps working.
+        </p>
+      </div>
+      <a class="btn btn--primary" href="demo.html">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+        Open the replay
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- -------------------------------------------------------------- citation -->
+<section class="section" id="citation">
+  <div class="shell">
+    <div class="section__head reveal">
+      <p class="eyebrow">Citation</p>
+      <h2>Cite this work</h2>
+    </div>
+    <div class="citation reveal">
+      <button class="copy-btn" id="copy-cite" type="button">Copy</button>
+      <pre id="bibtex">@misc{deng2026nce,
+  title         = {Editing as Language: Teaching {LLM} Agents a Grammar for Native Context Editing},
+  author        = {Yunlong Deng and Yan Li and Xing Hu and Yida Zhu and Sean Du and Weiyang Liu and Guangyi Chen},
+  year          = {2026},
+  eprint        = {XXXX.XXXXX},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url           = {https://github.com/dengyl20/native-context-editing}
+}</pre>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ---------------------------------------------------------------- footer -->
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div class="site-footer__mark">
+      <span class="logo logo--footer" role="img" aria-label="LongCat"></span>
+      <span class="site-footer__method">Native Context Editing</span>
+    </div>
+    <p class="site-footer__legal">
+      Released under the <a href="https://github.com/dengyl20/native-context-editing/blob/main/LICENSE">MIT licence</a>.
+      Code on <a href="https://github.com/dengyl20/native-context-editing">GitHub</a>.
+    </p>
+  </div>
+</footer>
+
+<script>
+/* Minimal, dependency-free behaviour. Progressive: the page reads fine with JS off. */
+(function () {
+  "use strict";
+
+  // ---- bind config into the DOM -------------------------------------------
+  var C = window.NCE || {};
+
+  function setText(sel, text) {
+    document.querySelectorAll('[data-bind="' + sel + '"]').forEach(function (el) {
+      el.textContent = text;
+    });
+  }
+  if (C.title) {
+    // The display lines are set by hand in CONFIG.titleLines; the canonical
+    // title still goes to <title>. Fall back to the colon break if a maintainer
+    // only edits `title`.
+    var el = document.querySelector('[data-bind="title"]');
+    if (el) {
+      var lines = C.titleLines && C.titleLines.length
+        ? C.titleLines
+        : (function (t) {
+            var at = t.indexOf(": ");
+            return at > -1 ? [t.slice(0, at + 1), t.slice(at + 2)] : [t];
+          })(C.title);
+      el.textContent = "";
+      lines.forEach(function (line, i) {
+        el.appendChild(document.createTextNode(line));
+        if (i < lines.length - 1) {
+          // The space matters only where the <br> is hidden (phone widths,
+          // see .hero__title br); at the end of a rendered line it collapses.
+          el.appendChild(document.createTextNode(" "));
+          el.appendChild(document.createElement("br"));
+        }
+      });
+    }
+    document.title = C.title;
+  }
+  setText("method", C.method || "NCE");
+  // affiliations — the numbered institution line under the author list
+  var affil = document.querySelector('[data-bind="affiliation"]');
+  if (affil) {
+    if (C.affiliations && C.affiliations.length) {
+      C.affiliations.forEach(function (a, i) {
+        if (i) affil.appendChild(document.createTextNode(" \u00b7 "));
+        // One institution wraps as a unit; only the separators break lines.
+        var part = document.createElement("span");
+        part.className = "affil-item";
+        var n = document.createElement("sup");
+        n.className = "affil-mark";
+        n.textContent = a.n;
+        part.appendChild(n);
+        part.appendChild(document.createTextNode(" " + a.text));
+        affil.appendChild(part);
+      });
+      affil.classList.add("hero__affil--list");
+    } else {
+      setText("affiliation", C.affiliation || "");
+    }
+  }
+
+  // authors
+  var authors = document.getElementById("authors");
+  if (authors && C.authors) {
+    C.authors.forEach(function (a, i) {
+      if (i) authors.appendChild(document.createTextNode("  "));
+      var link = document.createElement("a");
+      link.className = "hero__author";
+      link.href = a.url;
+      link.textContent = a.name;
+      // Numbers name the affiliations, as on the paper's title page; the
+      // symbols carry the equal-contribution and corresponding-author notes.
+      (a.affil || []).forEach(function (n, k) {
+        var s = document.createElement("sup");
+        s.className = "affil-mark";
+        s.textContent = (k ? "," : "") + n;
+        link.appendChild(s);
+      });
+      (a.markers || []).forEach(function (m) {
+        var s = document.createElement("sup");
+        s.textContent = m;
+        link.appendChild(s);
+      });
+      authors.appendChild(link);
+    });
+  }
+
+  // notes under the author list
+  var notes = document.getElementById("notes");
+  if (notes && C.notes) {
+    C.notes.forEach(function (n, i) {
+      if (i) notes.appendChild(document.createTextNode("  "));
+      var m = document.createElement("span");
+      m.className = "marker";
+      m.textContent = n.marker;
+      notes.appendChild(m);
+      notes.appendChild(document.createTextNode(" " + n.text));
+    });
+  }
+
+  // links — data-link names a key in NCE.links; data-fallback names a second
+  // key to try before the button is dropped from the page.
+  var L = C.links || {};
+  document.querySelectorAll("[data-link]").forEach(function (el) {
+    var url = L[el.getAttribute("data-link")] || L[el.getAttribute("data-fallback")];
+    if (url) { el.setAttribute("href", url); }
+    else { el.setAttribute("hidden", ""); }
+  });
+  // label the primary button for where it actually points
+  if (L.arxiv) { setText("paper-label", "arXiv"); }
+
+  // ---- teaser: swap the raster figure for the vector one if it is missing --
+  var img = document.getElementById("teaser-img");
+  var alt = document.getElementById("teaser-svg");
+  if (img && alt) {
+    var test = new Image();
+    test.onerror = function () { img.hidden = true; alt.hidden = false; };
+    test.src = img.getAttribute("src");
+  }
+
+  // ---- video: fall back cleanly if the file is not bundled -----------------
+  var v = document.getElementById("pv");
+  var fb = document.getElementById("pv-fallback");
+  // Only a real decode failure counts. A network error on the <source> also
+  // fires when the browser aborts a fetch it no longer needs (a seek, or a
+  // server without range support), and reporting that as "not bundled" hides
+  // a film that is in fact there.
+  function filmFailed() {
+    var dead = v.error !== null || v.networkState === v.NETWORK_NO_SOURCE;
+    if (dead) { v.hidden = true; fb.hidden = false; }
+    return dead;
+  }
+  if (v && fb) {
+    v.addEventListener("error", filmFailed);
+    v.addEventListener("stalled", function () { window.setTimeout(filmFailed, 20000); });
+  }
+
+  // ---- film: the poster doubles as a play button ---------------------------
+  // It is a convenience over the native control bar, never a replacement: the
+  // <video> keeps its controls, so playback is reachable with JS off and with
+  // the keyboard. With JS on the overlay hides once playback starts.
+  var play = document.getElementById("pv-play");
+  var stage = document.getElementById("pv-stage");
+  if (v && play && stage) {
+    play.addEventListener("click", function () {
+      var p = v.play();
+      if (p && p.catch) { p.catch(function () {}); }  // autoplay refusal: control bar still works
+    });
+    v.addEventListener("play", function () { stage.classList.add("is-playing"); });
+    v.addEventListener("ended", function () { stage.classList.remove("is-playing"); });
+
+    // Arriving with #video — the film link in the README and in the paper —
+    // means the reader has already asked to watch. Start it, and if the
+    // browser declines to autoplay, pulse the play button instead of leaving
+    // a still frame with no cue.
+    var sound = document.getElementById("pv-sound");
+    if (sound) {
+      sound.addEventListener("click", function () {
+        v.muted = false;
+        sound.hidden = true;
+        var p = v.play();
+        if (p && p.catch) { p.catch(function () {}); }
+      });
+    }
+
+    if (location.hash === "#video") {
+      var go = function () {
+        var p = v.play();
+        if (p && p.catch) {
+          p.catch(function () {
+            // Browsers allow autoplay only when muted. Start silently and offer
+            // the sound as one tap, rather than a still frame and no cue.
+            v.muted = true;
+            var q = v.play();
+            if (q && q.catch) {
+              q.catch(function () { play.classList.add("is-cued"); });
+            }
+            if (sound) { sound.hidden = false; }
+          });
+        }
+      };
+      if (v.readyState >= 3 || v.preload !== "none") { go(); }
+      else { v.addEventListener("loadeddata", go, { once: true }); }
+    }
+  }
+
+  // ---- theme toggle, remembered ------------------------------------------
+  var root = document.documentElement;
+  var stored = null;
+  try { stored = localStorage.getItem("nce-theme"); } catch (e) { stored = null; }
+  if (stored === "dark" || stored === "light") root.setAttribute("data-theme", stored);
+
+  var toggle = document.getElementById("theme-toggle");
+  if (toggle) {
+    toggle.addEventListener("click", function () {
+      var isDark = root.getAttribute("data-theme") === "dark" ||
+        (!root.getAttribute("data-theme") &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches);
+      var next = isDark ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("nce-theme", next); } catch (e) {}
+    });
+  }
+
+  // ---- copy the BibTeX ----------------------------------------------------
+  var copy = document.getElementById("copy-cite");
+  if (copy && navigator.clipboard) {
+    copy.addEventListener("click", function () {
+      var text = document.getElementById("bibtex").textContent;
+      navigator.clipboard.writeText(text).then(function () {
+        copy.textContent = "Copied";
+        copy.classList.add("is-copied");
+        setTimeout(function () {
+          copy.textContent = "Copy";
+          copy.classList.remove("is-copied");
+        }, 1600);
+      });
+    });
+  } else if (copy) {
+    copy.hidden = true;
+  }
+
+  // ---- scroll reveal ------------------------------------------------------
+  var items = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window && items.length) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add("is-visible");
+          io.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -12% 0px", threshold: 0.08 });
+    items.forEach(function (el) { io.observe(el); });
+  } else {
+    items.forEach(function (el) { el.classList.add("is-visible"); });
+  }
+})();
+</script>
+<script src="static/hero/hero-blocks.js" defer></script>
+</body>
+</html>

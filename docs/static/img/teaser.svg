@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 434" width="1280" height="434" role="img" aria-label="An agent's context shown as a column of addressable blocks before and after an edit turn: two blocks kept, one rewritten to a note, one dropped, and one note appended.">
+  <defs>
+    <style>
+      .bg    { fill: #F3F1EB; }
+      .card  { fill: #FFFFFF; stroke: #E6E3DC; stroke-width: 1.5; }
+      .label { font-family: "Inter", system-ui, sans-serif; font-size: 15px; font-weight: 500; fill: #5B6474; }
+      .mono  { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13.5px; font-weight: 500; }
+      .title { font-family: "Instrument Serif", Georgia, serif; font-size: 31px; fill: #1C2230; }
+      .sub   { font-family: "Inter", system-ui, sans-serif; font-size: 14px; fill: #868D97; }
+      .addr  { fill: #1D4ED8; }
+      .rule  { stroke: #D6D2C8; stroke-width: 2; fill: none; }
+      .edgedrop { fill: #F7D3D1; stroke: #A1282A; stroke-width: 1.5; }
+      .edgerw   { fill: #FAE1B0; stroke: #DFA032; stroke-width: 1.5; }
+      .edgeapp  { fill: #D6EDDA; stroke: #2C6A3B; stroke-width: 1.5; }
+      .fgdrop { fill: #A1282A; }
+      .fgrw   { fill: #7A4A00; }
+      .fgapp  { fill: #2C6A3B; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1280" height="434"/>
+
+  <text class="title" x="56" y="62">The agent&#8217;s context, as addressable blocks</text>
+  <text class="sub" x="56" y="88">each block is named by a pair of address tokens; edits are executed at the end of the turn that emits them</text>
+
+  <!-- section: before -->
+  <text class="label" x="56" y="136">before the edit turn</text>
+
+  <g>
+    <rect class="card" x="56" y="152" width="440" height="44" rx="8"/>
+    <rect x="56" y="152" width="4" height="44" rx="2" fill="#3A4352"/>
+    <text class="mono addr" x="76" y="180">&lt;sid_hi_00&gt;&lt;sid_lo_00&gt;</text>
+    <text class="label" x="384" y="180">system</text>
+
+    <rect class="card" x="56" y="204" width="440" height="44" rx="8"/>
+    <rect x="56" y="204" width="4" height="44" rx="2" fill="#2563EB"/>
+    <text class="mono addr" x="76" y="232">&lt;sid_hi_00&gt;&lt;sid_lo_01&gt;</text>
+    <text class="label" x="384" y="232">task</text>
+
+    <rect class="card" x="56" y="256" width="440" height="44" rx="8"/>
+    <rect x="56" y="256" width="4" height="44" rx="2" fill="#C9D3E3"/>
+    <text class="mono addr" x="76" y="284">&lt;sid_hi_00&gt;&lt;sid_lo_04&gt;</text>
+    <text class="label" x="340" y="284">tool output</text>
+
+    <rect class="card" x="56" y="308" width="440" height="44" rx="8"/>
+    <rect x="56" y="308" width="4" height="44" rx="2" fill="#C9D3E3"/>
+    <text class="mono addr" x="76" y="336">&lt;sid_hi_00&gt;&lt;sid_lo_11&gt;</text>
+    <text class="label" x="340" y="336">tool output</text>
+  </g>
+
+  <!-- section: arrow -->
+  <path class="rule" d="M520 254h92"/>
+  <path class="rule" d="m600 243 12 11-12 11"/>
+  <text class="label" x="566" y="232" text-anchor="middle">edit turn</text>
+
+  <!-- section: after -->
+  <text class="label" x="648" y="136">after the edit turn</text>
+
+  <g>
+    <rect class="card" x="648" y="152" width="576" height="44" rx="8"/>
+    <rect x="648" y="152" width="4" height="44" rx="2" fill="#3A4352"/>
+    <text class="mono addr" x="668" y="180">&lt;sid_hi_00&gt;&lt;sid_lo_00&gt;</text>
+    <text class="label" x="1088" y="180">kept, locked</text>
+
+    <rect class="card" x="648" y="204" width="576" height="44" rx="8"/>
+    <rect x="648" y="204" width="4" height="44" rx="2" fill="#2563EB"/>
+    <text class="mono addr" x="668" y="232">&lt;sid_hi_00&gt;&lt;sid_lo_01&gt;</text>
+    <text class="label" x="1088" y="232">kept</text>
+
+    <rect class="edgerw" x="648" y="256" width="576" height="44" rx="8"/>
+    <text class="mono fgrw" x="668" y="284">&lt;sid_hi_00&gt;&lt;sid_lo_04&gt;</text>
+    <text class="label" x="1044" y="284">rewritten to a note</text>
+
+    <rect class="edgedrop" x="648" y="308" width="576" height="44" rx="8"/>
+    <text class="mono fgdrop" x="668" y="336">&lt;sid_hi_00&gt;&lt;sid_lo_11&gt;</text>
+    <text class="label" x="1088" y="336">dropped</text>
+  </g>
+
+  <!-- the appended note sits below, on its own rule -->
+  <path class="rule" d="M648 366h576" stroke="#E6E3DC"/>
+  <rect class="edgeapp" x="648" y="378" width="576" height="44" rx="8"/>
+  <text class="mono fgapp" x="668" y="406">&lt;sid_hi_01&gt;&lt;sid_lo_02&gt;</text>
+  <text class="label" x="1088" y="406">appended</text>
+</svg>

@@ -529,7 +529,10 @@
         n.className = "affil-mark";
         n.textContent = a.n;
         part.appendChild(n);
-        part.appendChild(document.createTextNode(" " + a.text));
+        // A non-breaking space keeps the number with the first word of the
+        // institution, so a wrapped line never starts with "Mohamed..." and
+        // leaves its "4" stranded at the end of the previous one.
+        part.appendChild(document.createTextNode("\u00a0" + a.text.replace(/ /, "\u00a0")));
         affil.appendChild(part);
       });
       affil.classList.add("hero__affil--list");

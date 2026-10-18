@@ -747,3 +747,130 @@
 .film__sound svg { width: 1.05rem; height: 1.05rem; fill: currentColor; }
 .film__sound:hover { background: rgba(20, 27, 42, 0.96); }
 .film__sound[hidden] { display: none; }
+
+/* ==========================================================================
+   Phones — portrait layout
+   --------------------------------------------------------------------------
+   The desktop composition is built on wide centred lines: a three-line
+   display title, an author list and a numbered institution line that is set
+   `nowrap` so an institution never splits. None of that survives a 390 px
+   column, and two of those rules actively break the layout: the nowrap
+   institution line is wider than the viewport (which makes the whole document
+   scroll sideways by a few pixels), and the display size bottoms out at 44 px,
+   which turns the title into four cramped lines over a busy background.
+
+   Everything below is scoped to portrait phones. Tablet and desktop keep the
+   composition they were designed for.
+   ========================================================================== */
+@media (max-width: 40rem) {
+  /* A phone column is narrow, so the horizontal padding is tightened a little;
+     this alone buys ~12 px of measure on a 390 px screen. */
+  .shell { padding-inline: var(--space-4); }
+
+  /* --- title -------------------------------------------------------------
+     The desktop display size bottoms out far too large for one column. Scale
+     with the viewport, but keep the display face and its tight leading: the
+     title should read as a title, not as body copy. */
+  .hero__title {
+    font-size: clamp(1.9rem, 8.2vw, 2.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-4);
+  }
+
+  /* --- authors and institutions -----------------------------------------
+     Names wrap between people, never inside one; institutions now wrap inside
+     themselves, because a nowrap institution is wider than the screen. */
+  .hero__authors {
+    font-size: var(--fs-small);
+    line-height: 1.8;
+    padding-inline: var(--space-2);
+  }
+  .hero__affil--list { line-height: 1.9; }
+  /* Institutions must wrap (a nowrap line overflows the phone), but the
+     number must never be orphaned from the name it labels: the knot is
+     forced with a non-breaking space by the script. */
+  .hero__affil--list .affil-item { white-space: normal; }
+  .hero__affil--list .affil-item sup { display: inline; }
+
+  /* --- header ------------------------------------------------------------
+     Four section links plus the mark and the toggle only just fit at 390 px
+     and overflow below 360 px. Tighten the type and the gap, and drop the
+     wordmark so the links keep their full labels. */
+  .site-header__inner { gap: var(--space-3); min-height: 3.5rem; }
+  .site-nav { gap: var(--space-2); }
+  .site-nav a { font-size: var(--fs-caption); }
+  .site-header__mark { font-size: var(--fs-small); }
+  .theme-toggle { width: 2rem; height: 2rem; }
+
+  /* --- hero background ---------------------------------------------------
+     At phone width the block field sits directly behind the title, and its
+     card edges cross the letterforms. Push the wash up so the cards read as
+     texture at the edges of the band, never as columns behind the type. */
+  .hero-bg {
+    --hero-veil-size: 132% 86%;
+    --hero-veil-color: rgba(251, 250, 247, 0.82);
+    --hero-field-opacity: 0.42;
+  }
+  :root[data-theme="dark"] .hero-bg { --hero-veil-color: rgba(13, 20, 36, 0.86); }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]):not([data-theme="dark"]) .hero-bg {
+      --hero-veil-color: rgba(13, 20, 36, 0.86);
+    }
+  }
+
+  /* --- buttons -----------------------------------------------------------
+     Three pills side by side do not fit; let them wrap and share the row
+     evenly so they read as one control group rather than as a ragged stack. */
+  /* Equal-width pills pushed "Live demo" onto two lines; keep the labels on
+     one line and let the row wrap instead. */
+  .hero__links { gap: var(--space-2); }
+  .hero__links .btn {
+    flex: 0 1 auto;
+    justify-content: center;
+    white-space: nowrap;
+    padding-inline: var(--space-3);
+  }
+
+  /* --- film --------------------------------------------------------------
+     The player is fine at 16:9; only its caption needs a touch more room. */
+  .film__caption { margin-top: var(--space-3); }
+  .film__lede { font-size: var(--fs-caption); }
+
+  /* --- sections ----------------------------------------------------------
+     Vertical rhythm was tuned for a 1200 px column; on a phone it reads as
+     too much air between short blocks. */
+  .section { padding-block: var(--space-6); }
+  .section__head { margin-bottom: var(--space-5); }
+  .hero { padding-block: var(--space-6) var(--space-5); }
+
+  /* --- results tables ----------------------------------------------------
+     The tables keep their horizontal scroll (a sticky first column and a
+     fading right edge), but the minimum width can come down: at 34 rem every
+     row showed a quarter of a column it did not need. */
+  .table-scroll table { min-width: 28rem; }
+  .data-table { font-size: var(--fs-small); }
+  .data-table th,
+  .data-table td { padding: 0.5rem 0.55rem; }
+
+  /* --- figures and code --------------------------------------------------
+     The teaser keeps its sideways scroll at a legible label size; the code
+     blocks simply need a little less padding so the longest line fits. */
+  .grammar { padding: var(--space-3); }
+  .cf, pre, code { font-size: 0.8125rem; }
+
+  /* --- citation ---------------------------------------------------------- */
+  .citation { font-size: var(--fs-caption); }
+}
+
+/* Small phones (iPhone SE and similar): the header links have to give up a
+   little more before the row overflows. */
+@media (max-width: 23rem) {
+  .site-nav a { font-size: 0.7rem; }
+  .site-nav { gap: var(--space-1); }
+  .site-header__mark { display: none; }
+}
+
+/* Belt and braces against any future horizontal overflow: nothing on this
+   page is meant to scroll sideways at the document level. */
+html { overflow-x: clip; }

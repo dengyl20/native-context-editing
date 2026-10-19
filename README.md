@@ -1,13 +1,12 @@
 <div align="center">
 
-<!-- Two transparent SVGs rather than a <picture> over a white-ground PNG.
-     `<picture>` keys off the operating system, not off GitHub's own theme, so
-     a reader on a light OS with GitHub in dark mode got the PNG and its white
-     square. The `#gh-dark-mode-only` / `#gh-light-mode-only` fragments key off
-     the page's theme instead, and both files are pure paths with no background
-     rect, so nothing shows through. -->
-<img src="assets/longcat-logo-white.svg#gh-dark-mode-only" alt="LongCat" height="44">
-<img src="assets/longcat-logo.svg#gh-light-mode-only" alt="LongCat" height="44">
+<!-- One lockup with its own ground, rather than two assets and a theme test.
+     Every switching mechanism (`<picture>` with prefers-color-scheme, GitHub's
+     #gh-dark-mode-only fragments) depends on the renderer implementing it; when
+     one does not, a dark page gets the light-ground artwork and the wordmark
+     vanishes into the background. This file carries a near-black plate, so the
+     white wordmark is legible on any ground and nothing has to be switched. -->
+<img src="assets/longcat-lockup.svg" alt="LongCat" height="44">
 
 # Native Context Editing
 

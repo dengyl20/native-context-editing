@@ -54,5 +54,4 @@ preferred-citation:
     - family-names: Chen
       given-names: Guangyi
   year: 2026
-  # TODO before publication: replace XXXX.XXXXX with the arXiv identifier.
-  url: "https://arxiv.org/abs/XXXX.XXXXX"
+  url: "https://arxiv.org/abs/2610.25550"

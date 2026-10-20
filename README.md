@@ -14,7 +14,7 @@
 
 *Editing as Language: Teaching LLM Agents a Grammar for Native Context Editing*
 
-[![arXiv](https://img.shields.io/badge/arXiv-XXXX.XXXXX-B31B1B)](https://arxiv.org/abs/XXXX.XXXXX)
+[![arXiv](https://img.shields.io/badge/arXiv-2610.25550-B31B1B)](https://arxiv.org/abs/2610.25550)
 [![Project page](https://img.shields.io/badge/project%20page-visit-2563EB)](https://dengyl20.github.io/native-context-editing/)
 [![Demo](https://img.shields.io/badge/demo-replay%20a%20recorded%20run-2563EB)](https://dengyl20.github.io/native-context-editing/demo.html)
 [![Film](https://img.shields.io/badge/film-watch%20130%20s%20with%20sound-2563EB)](https://dengyl20.github.io/native-context-editing/#video)
@@ -283,14 +283,14 @@ python3 -m unittest discover -s tests -v
   author        = {Yunlong Deng and Yan Li and Xing Hu and Yida Zhu
                    and Sean Du and Weiyang Liu and Guangyi Chen},
   year          = {2026},
-  eprint        = {XXXX.XXXXX},
+  eprint        = {2610.25550},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL},
   url           = {https://github.com/dengyl20/native-context-editing}
 }
 ```
 
-The arXiv identifier is pending and will replace `XXXX.XXXXX` here, in [`CITATION.cff`](CITATION.cff), and on the project page. Maintained citation metadata lives in [`CITATION.cff`](CITATION.cff).
+Preprint: [arXiv:2610.25550](https://arxiv.org/abs/2610.25550). Maintained citation metadata lives in [`CITATION.cff`](CITATION.cff).
 
 ## Scope and license
 

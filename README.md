@@ -285,7 +285,7 @@ python3 -m unittest discover -s tests -v
   year          = {2026},
   eprint        = {2610.25550},
   archivePrefix = {arXiv},
-  primaryClass  = {cs.CL},
+  primaryClass  = {cs.AI},
   url           = {https://github.com/dengyl20/native-context-editing}
 }
 ```
